@@ -1,0 +1,45 @@
+
+
+export const tags = {
+	dianfeng:[
+		{topId:62,name:"飙升榜"},
+		{topId:26,name:"热歌榜"},
+		{topId:27,name:"新歌榜"},
+		{topId:4,name:"流行指数榜"},
+		{topId:67,name:"听歌识曲榜"}
+	],
+	area:[
+		{topId:5,name:"内地榜"},
+		{topId:59,name:"香港地区榜"},
+		{topId:61,name:"台湾地区榜"},
+		{topId:3,name:"欧美榜"},
+		{topId:16,name:"韩国榜"},
+		{topId:17,name:"日本榜"}
+	],
+	specail:[
+		{topId:28,name:"网络歌曲榜"},
+		{topId:63,name:"DJ舞曲榜"},
+		{topId:74,name:"Q音快手榜"},
+		{topId:29,name:"影视金曲榜"},
+		{topId:60,name:"抖音排行榜"},
+		{topId:65,name:"国风热歌榜"},
+		{topId:58,name:"说唱榜"},
+		{topId:57,name:"电音榜"},
+		{topId:72,name:"动漫音乐榜"},
+		{topId:73,name:"游戏音乐榜"},
+		{topId:70,name:"达人音乐榜"},
+		{topId:36,name:"K歌金曲榜"},
+		{topId:52,name:"腾讯音乐人原创榜"},
+	],
+	world:[
+		{topId:108,name:"美国公告牌榜"},
+		{topId:123,name:"美国iTunes榜"},
+		{topId:129,name:"韩国Melon榜"},
+		{topId:107,name:"英国UK榜"},
+		{topId:105,name:"日本公信榜"},
+		{topId:126,name:"JOOX本地热播榜"},
+		{topId:114,name:"香港商台榜"},
+		{topId:127,name:"台湾KKBOX榜"},
+		{topId:128,name:"YouTube音乐排行榜"}
+	]
+}
