@@ -1,4 +1,4 @@
-
+﻿
 
 import React from 'react'
 import { Text, TouchableHighlight } from 'react-native'
@@ -18,7 +18,7 @@ import MVScreen from '../mv'
 import DigitalScreen from '../digital'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
-
+import { setIndex,setCurrentSongs } from '../../redux/actions'
 
 const Stack = createStackNavigator();
 class Main extends React.Component {
@@ -54,13 +54,14 @@ class Main extends React.Component {
                     console.log('failed to load the sound', error);
                     return;
                 }
-                player.setVolume(0.5);
+                // player.setVolume(0.5);
                 this.setState({
                     player
                 })
                 console.log('duration in seconds: ' + player.getDuration() + 'number of channels: ' + player.getNumberOfChannels());
                 player.play((success) => {
                     console.log("播放结束了")
+                    this.playNext()
                 })
             })
         }
@@ -151,7 +152,8 @@ export default connect(
         currentIndex: state.currentIndex,
         loveList: state.loveList,
         userSheet: state.userSheet
-    })
+    }),
+    { setIndex,setCurrentSongs }
 )(Main)
 
 
