@@ -21,6 +21,9 @@ class Login extends React.Component {
             [name]: input.trim()
         })
     }
+    toRegister = () => {
+        this.props.navigation.navigate('Register')
+    }
 
     onSubmit = () => {
         this.props.login(this.state)
@@ -82,7 +85,8 @@ class Login extends React.Component {
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.registerBtn}>
+                        <TouchableOpacity style={styles.registerBtn} 
+                            onPress={ () => this.toRegister() }>
                             <View>
                                 <Text style={styles.registerText}>
                                     注册

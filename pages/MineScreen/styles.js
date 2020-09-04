@@ -135,11 +135,16 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         overflow:"hidden"
     },
-    geDan_Item_bg:{
+    geDan_Item_bg_box:{
         width:50,
         height:50,
+        marginRight:10,
         borderRadius:10,
-        marginRight:10
+        overflow:"hidden"
+    },
+    geDan_Item_bg:{
+        width:"100%",
+        height:"100%"
     },
     geDan_Item_title:{
         color:'#828282',

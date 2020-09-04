@@ -2,15 +2,14 @@
 import React from 'react'
 import Animated from 'react-native-reanimated';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { Text, View, TouchableOpacity,Image,Dimensions,StatusBar,TouchableHighlight  } from 'react-native';
+import { View, TouchableOpacity,Image,StatusBar  } from 'react-native';
 import FindScreen from '../FindScreen'
 import ProfileScreen from '../ProfileScreen'
 import MineScreen from '../MineScreen'
 import VideoScreen from '../VideoScreen'
-
+import BottomPlayer from '../../components/bottomPlayer'
 
 const Tab = createMaterialTopTabNavigator();
-var {height,width} =  Dimensions.get('window');
 
 class MyTabBar extends React.Component {
 
@@ -98,10 +97,7 @@ class MyTabBar extends React.Component {
                         </View>
                     </TouchableOpacity >
                 </View>
-                <TouchableHighlight onPress={ () => navigation.navigate('Play') }  style={{ marginBottom:1,position: 'absolute',left:0, top: height - 74, zIndex: 100, backgroundColor: 'gray', width: width, height: 50 }}>
-                    <View><Text>111</Text></View>
-                </TouchableHighlight>
-                
+                <BottomPlayer navigation={navigation} />
             </View>
         );
     }

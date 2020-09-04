@@ -44,6 +44,7 @@ export const getUserInfo = (data) => {
 			dispatch(authSuccess(response.data))
 		}else{
 			// Cookies.remove('userKey')
+			await AsyncStorage.removeItem('userId')
 			dispatch(resetAuth(response.msg))
 		}
 	}

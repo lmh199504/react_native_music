@@ -16,6 +16,7 @@ import RankScreen from '../ranklist'
 import SingerScreen from '../singer'
 import MVScreen from '../mv'
 import DigitalScreen from '../digital'
+import RegisterScreen from '../register'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
 import { setIndex,setCurrentSongs } from '../../redux/actions'
@@ -42,24 +43,27 @@ class Main extends React.Component {
     }
 
     componentDidUpdate = () => {
-        const { cSong } = this.state
+        const { cSong,player } = this.state
         const { currentSong } = this.props
         if (currentSong.songmid && currentSong.songmid !== cSong.songmid) {
             this.setState({
                 cSong: currentSong
             })
 
-            let player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
+            if(player){
+                player.release()
+            }   
+
+            let $player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
                 if (error) {
                     console.log('failed to load the sound', error);
                     return;
                 }
-                // player.setVolume(0.5);
+
                 this.setState({
-                    player
+                    player:$player
                 })
-                console.log('duration in seconds: ' + player.getDuration() + 'number of channels: ' + player.getNumberOfChannels());
-                player.play((success) => {
+                $player.play((success) => {
                     console.log("播放结束了")
                     this.playNext()
                 })
@@ -89,6 +93,11 @@ class Main extends React.Component {
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         header: () => { return null }
                     }} />
+                    <Stack.Screen name="Register" component={ RegisterScreen } options={{
+                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        header: () => { return null }
+                    }} />
+
                     <Stack.Screen name="GeDan" component={GeDanScreen} options={
                         ({ navigation }) => ({
                             title: "歌单",

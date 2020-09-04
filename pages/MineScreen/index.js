@@ -138,7 +138,9 @@ class Mine extends React.Component {
                             userSheet.map((item, index) => (
                                 <View style={styles.geDan_Item} key={index}>
                                     <View>
-                                        <Image style={styles.geDan_Item_bg} source={{ uri: item.sheetCover }} />
+                                        <View style={ styles.geDan_Item_bg_box }>
+                                            <Image style={styles.geDan_Item_bg} source={{ uri: item.sheetCover }} />
+                                        </View>
                                     </View>
                                     <View>
                                         <Text style={styles.geDan_Item_title}>{item.name}</Text>
@@ -149,7 +151,7 @@ class Mine extends React.Component {
                         }
 
                         <View style={styles.geDan_Item}>
-                            <TouchableHighlight onPress={ () => this.onPressAdd() }>
+                            <TouchableHighlight onPress={() => this.onPressAdd()}>
                                 <View>
                                     <View style={{ ...styles.geDan_Item_bg, backgroundColor: "#f3f3f3", borderRadius: 5 }} >
                                         <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />

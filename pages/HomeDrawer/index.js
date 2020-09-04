@@ -16,6 +16,7 @@ class DrawerNav extends React.Component {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress',
             this.onBackButtonPressAndroid);
         const userId = await AsyncStorage.getItem('userId')
+        console.log(userId)
         if (!!userId) {
             this.props.getUserInfo()
         } else {
