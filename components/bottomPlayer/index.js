@@ -1,11 +1,12 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, TouchableHighlight } from 'react-native'
+import { View, Text, Image, TouchableHighlight, ScrollView,Dimensions } from 'react-native'
 import { Button, Modal } from '@ant-design/react-native'
 import styles from './styles'
 import * as Progress from 'react-native-progress'
-
+import { playing, stopPlay } from '../../redux/actions'
+const { width } = Dimensions.get('window')
 class BottomPlayer extends React.Component {
 
     state = {
@@ -19,16 +20,29 @@ class BottomPlayer extends React.Component {
         this.setState({
             visible: false,
         });
-    };
+    }
+    togglePlay = () => {
+        const { currentSong,isPlay }  = this.props
+        if(currentSong.songmid){
+            if(isPlay){ //播放中
+                this.props.stopPlay()
+            }else{  //暂停播放
+                this.props.playing()
+            }
+        }else{
+
+        }
+    }
     render() {
 
-        const { currentSong } = this.props
+        const { currentSong, playList,isPlay } = this.props
         const footerButtons = [
             { text: 'Cancel', onPress: () => console.log('cancel') },
             { text: 'Ok', onPress: () => console.log('ok') },
         ];
         return (
             <View style={styles.container}>
+                <Progress.Bar style={{ marginLeft:5 }} progress={0.3} width={width - 10 } height={1} borderColor="transparent" color="#fe4c3d" unfilledColor="gray"/>
                 <View style={styles.container_box}>
                     <View style={styles.left}>
                         <View style={styles.coverView}>
@@ -40,9 +54,9 @@ class BottomPlayer extends React.Component {
                         </View>
                     </View>
                     <View style={styles.right}>
-                        <View>
-                            <Progress.Pie progress={0.4} size={40} borderColor="#848484"/>
-                        </View>
+                        <TouchableHighlight onPress={ () => this.togglePlay() }>
+                            <Image source={ isPlay ? require('./images/zanting.png'):require('./images/bofang.png') } style={ styles.playImg}/>
+                        </TouchableHighlight>
                         <TouchableHighlight onPress={() => this.setState({ visible: true })}>
                             <Image source={require('./images/menu.png')} style={styles.menu_img} />
                         </TouchableHighlight>
@@ -50,21 +64,24 @@ class BottomPlayer extends React.Component {
                 </View>
 
                 <Modal
-                    title="Title"
+                    title="播放列表"
                     transparent
                     onClose={this.onClose}
                     maskClosable
                     visible={this.state.visible}
-                    closable
-                    footer={footerButtons}
+                    // closable
+                    // footer={footerButtons}
                 >
-                    <View style={{ paddingVertical: 20 }}>
-                        <Text style={{ textAlign: 'center' }}>Content...</Text>
-                        <Text style={{ textAlign: 'center' }}>Content...</Text>
-                    </View>
-                    <Button type="primary" onPress={this.onClose}>
-                        close modal
-                    </Button>
+                    <ScrollView style={{ paddingVertical: 20,height:350 }}>
+                        {
+                            playList.map((item,index) => (
+                                <View key={index}>
+                                    <Text>{item.title}</Text>
+                                    <Text>{item.singer[0].name}</Text>
+                                </View>
+                            ))
+                        }
+                    </ScrollView>
                 </Modal>
             </View>
 
@@ -75,7 +92,8 @@ class BottomPlayer extends React.Component {
 export default connect(
     state => ({
         currentSong: state.currentSong,
-        playList: state.playList
+        playList: state.playList,
+        isPlay: state.isPlay
     }),
-    {}
+    { playing, stopPlay }
 )(BottomPlayer)

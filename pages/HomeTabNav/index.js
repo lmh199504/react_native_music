@@ -23,7 +23,7 @@ class MyTabBar extends React.Component {
         return (
             <View>
                 <View style={{flexDirection: 'row',paddingLeft: 30, paddingRight: 30, paddingTop: 20,paddingBottom:15, justifyContent: 'space-between',overflow:"visible",backgroundColor}}>
-                    <StatusBar barStyle="default" backgroundColor={StatusBarColor} StatusBarAnimation="fade" />
+                    <StatusBar barStyle="dark-content" backgroundColor={StatusBarColor} StatusBarAnimation="fade" />
                     <TouchableOpacity
                         accessibilityRole="button"
                         onPress={() => navigation.openDrawer()}>

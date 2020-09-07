@@ -7,7 +7,7 @@ const styles = StyleSheet.create({
         marginBottom: 1,
         position: 'absolute',
         left: 0,
-        top: height - 74,
+        top: height - 50,
         zIndex: 100,
         backgroundColor: '#fff',
         width: width,
@@ -53,6 +53,12 @@ const styles = StyleSheet.create({
         height:20,
         marginTop:10,
         marginRight:20
+    },
+    playImg:{
+        width:30,
+        height:30,
+        marginTop:5,
+        marginRight:10
     }
 })
 

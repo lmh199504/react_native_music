@@ -26,7 +26,8 @@ const styles = StyleSheet.create({
         fontSize:12
     },
     coverImg:{
-        borderRadius:5
+        borderRadius:5,
+        width:"100%"
     }
 
 })

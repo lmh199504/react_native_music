@@ -10,9 +10,6 @@ import AsyncStorage from '@react-native-community/async-storage'
 class Mine extends React.Component {
 
     onPressAdd = () => {
-        console.log("播放歌曲")
-
-
         const { loveList } = this.props
         loveList.forEach((item, index) => {
             if (index === 0) {
@@ -30,6 +27,9 @@ class Mine extends React.Component {
             this.props.setLoveLists()
             this.props.setUserSheets()
         }
+    }
+    componentDidUpdate = async () => {
+
     }
     render() {
         const { user, userSheet } = this.props
@@ -102,11 +102,13 @@ class Mine extends React.Component {
                     <View style={{ width: '100%', overflow: 'hidden', marginBottom: 10 }}>
                         <ScrollView horizontal={true} >
 
-                            <View style={styles.mymusic_item}>
-                                <Image source={require('./images/bg.jpg')} style={styles.music_Item_bg} />
-                                <Image source={require('./images/xin.png')} style={styles.center_img} />
-                                <Text style={styles.music_Item_Text}>我喜欢的音乐</Text>
-                            </View>
+                            <TouchableHighlight style={styles.mymusic_item} onPress={() => this.onPressAdd()}>
+                                <View>
+                                    <Image source={require('./images/bg.jpg')} style={styles.music_Item_bg} />
+                                    <Image source={require('./images/xin.png')} style={styles.center_img} />
+                                    <Text style={styles.music_Item_Text}>我喜欢的音乐</Text>
+                                </View>
+                            </TouchableHighlight>
                             <View style={styles.mymusic_item}>
                                 <Image source={require('./images/bg.jpg')} style={styles.music_Item_bg} />
                                 <Image source={require('./images/xin.png')} style={styles.center_img} />
@@ -138,7 +140,7 @@ class Mine extends React.Component {
                             userSheet.map((item, index) => (
                                 <View style={styles.geDan_Item} key={index}>
                                     <View>
-                                        <View style={ styles.geDan_Item_bg_box }>
+                                        <View style={styles.geDan_Item_bg_box}>
                                             <Image style={styles.geDan_Item_bg} source={{ uri: item.sheetCover }} />
                                         </View>
                                     </View>
@@ -150,17 +152,14 @@ class Mine extends React.Component {
                             ))
                         }
 
-                        <View style={styles.geDan_Item}>
-                            <TouchableHighlight onPress={() => this.onPressAdd()}>
-                                <View>
-                                    <View style={{ ...styles.geDan_Item_bg, backgroundColor: "#f3f3f3", borderRadius: 5 }} >
-                                        <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />
-                                    </View>
+                        <View >
+                            <TouchableHighlight>
+                                <View style={{ height: 50, backgroundColor: "#f3f3f3", borderRadius: 5, width: 50, marginRight: 10, overflow: 'hidden' }} >
+                                    <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />
                                 </View>
                             </TouchableHighlight>
                             <View>
                                 <Text style={{ ...styles.geDan_Item_title, color: "#000", lineHeight: 40 }}>创建歌单</Text>
-
                             </View>
                         </View>
                     </View>

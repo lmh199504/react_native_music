@@ -19,7 +19,9 @@ import DigitalScreen from '../digital'
 import RegisterScreen from '../register'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
-import { setIndex,setCurrentSongs } from '../../redux/actions'
+import { setIndex,setCurrentSongs,playing } from '../../redux/actions'
+
+let playerTimer = null
 
 const Stack = createStackNavigator();
 class Main extends React.Component {
@@ -52,6 +54,7 @@ class Main extends React.Component {
 
             if(player){
                 player.release()
+                player.stop()
             }   
 
             let $player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
@@ -59,7 +62,12 @@ class Main extends React.Component {
                     console.log('failed to load the sound', error);
                     return;
                 }
+                this.props.playing()
 
+
+                // console.log('duration in seconds: ' + $player.getDuration() + 'number of channels: ' + $player.getNumberOfChannels());
+                playerTimer = $player.getCurrentTime()
+                
                 this.setState({
                     player:$player
                 })
@@ -162,7 +170,7 @@ export default connect(
         loveList: state.loveList,
         userSheet: state.userSheet
     }),
-    { setIndex,setCurrentSongs }
+    { setIndex,setCurrentSongs,playing }
 )(Main)
 
 

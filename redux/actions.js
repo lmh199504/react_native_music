@@ -28,8 +28,9 @@ export const login = (data) => {
 		console.log(response)
 		if(response.code === 0){
 			await AsyncStorage.setItem('userId',response.data._id)
-			console.log(response.data)
 			dispatch(authSuccess(response.data))
+			dispatch(setLoveLists())
+			dispatch(setUserSheets())
 		}else{
 			dispatch(authFail(response.msg))
 		}
@@ -42,6 +43,8 @@ export const getUserInfo = (data) => {
 		
 		if(response.code === 0){
 			dispatch(authSuccess(response.data))
+			dispatch(setLoveLists())
+			dispatch(setUserSheets())
 		}else{
 			// Cookies.remove('userKey')
 			await AsyncStorage.removeItem('userId')
