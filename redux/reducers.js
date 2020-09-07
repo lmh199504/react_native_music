@@ -5,8 +5,10 @@
  */
 import { combineReducers } from 'redux'
 import { AUTH_SUCCESS,AUTH_FAIL,RESET_AUTH,GET_HOME,RESET_PLAYLIST,SET_CURRENT_SONG,SHOW_BIGPLAYER,HIDE_BIGPLAYER,PLAYING,SET_INDEX,STOP_PLAY,ADD_SONG_TO_PLAY ,
-	SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET
+	SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET,
+	RESET_TIME,SET_CURRENT_TIME,SET_DURATION
 } from './action-types.js'
+import a from '@ant-design/react-native/lib/modal/operation'
 
 
 const initUser = {
@@ -153,6 +155,24 @@ function userSheet(state=[],action){
 	}
 }
 
+// RESET_TIME,SET_CURRENT_TIME,SET_DURATION
+const initTime = {
+	currentTime:0,
+	duration:0
+}
+function musictime(state=initTime,action){
+	switch (action.type){
+		case RESET_TIME:
+			return initTime
+		case SET_CURRENT_TIME:
+			return {...state,currentTime:action.data}
+		case SET_DURATION:
+			return {...state,duration:action.data}
+		default:
+			return state	
+	}
+}
+
 
 export default combineReducers({
 	user,
@@ -167,5 +187,6 @@ export default combineReducers({
 	loveList,
 	loveSinger,
 	loveSheet,
-	userSheet
+	userSheet,
+	musictime
 })

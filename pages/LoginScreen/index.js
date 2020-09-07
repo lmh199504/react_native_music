@@ -1,6 +1,6 @@
 
 import React from 'react'
-import { View, Image, StatusBar, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, Image, StatusBar, Text, TextInput, TouchableOpacity,BackHandler } from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage'
 // import { InputItem } from '@ant-design/react-native'
 import styles from './styles'

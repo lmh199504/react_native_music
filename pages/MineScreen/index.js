@@ -21,14 +21,10 @@ class Mine extends React.Component {
         this.props.resetPlaylist(loveList)
     }
 
-    componentDidMount = async () => {
-        const userId = await AsyncStorage.getItem('userId')
-        if (!!userId) {
-            this.props.setLoveLists()
-            this.props.setUserSheets()
-        }
+    componentDidMount = () => {
+
     }
-    componentDidUpdate = async () => {
+    componentDidUpdate = () => {
 
     }
     render() {

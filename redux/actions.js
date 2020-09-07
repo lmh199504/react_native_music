@@ -1,7 +1,10 @@
 
 
 import { AUTH_SUCCESS,AUTH_FAIL,RESET_AUTH,GET_HOME,RESET_PLAYLIST,SET_CURRENT_SONG,SHOW_BIGPLAYER,HIDE_BIGPLAYER,PLAYING,SET_INDEX,STOP_PLAY
-	 ,ADD_SONG_TO_PLAY,SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET} from './action-types.js'
+	 ,ADD_SONG_TO_PLAY,SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET,
+	 RESET_TIME,SET_CURRENT_TIME,SET_DURATION
+	
+	} from './action-types.js'
 // import Cookies from 'js-cookie'
 import AsyncStorage from '@react-native-community/async-storage'
 import { reqLogin,reqGetUserInfo,reqLogout,reqRegister,reqGetHome,reqGetSongListDetail,reqGetMusicVKey,
@@ -195,3 +198,9 @@ export const setUserSheets = () => {
 		}
 	}
 }
+
+//RESET_TIME,SET_CURRENT_TIME,SET_DURATION
+
+export const restTime = () => ({type:RESET_TIME})
+export const setCurrentTime = (data) => ({type:SET_CURRENT_TIME,data})
+export const setDuration = (data) => ({type:SET_DURATION,data})

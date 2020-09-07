@@ -19,7 +19,7 @@ import DigitalScreen from '../digital'
 import RegisterScreen from '../register'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
-import { setIndex,setCurrentSongs,playing } from '../../redux/actions'
+import { setIndex,setCurrentSongs,playing,restTime,setCurrentTime,setDuration } from '../../redux/actions'
 
 let playerTimer = null
 
@@ -46,7 +46,8 @@ class Main extends React.Component {
 
     componentDidUpdate = () => {
         const { cSong,player } = this.state
-        const { currentSong } = this.props
+        const { currentSong,isPlay } = this.props
+        let $player = null
         if (currentSong.songmid && currentSong.songmid !== cSong.songmid) {
             this.setState({
                 cSong: currentSong
@@ -57,7 +58,7 @@ class Main extends React.Component {
                 player.stop()
             }   
 
-            let $player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
+            $player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
                 if (error) {
                     console.log('failed to load the sound', error);
                     return;
@@ -66,17 +67,40 @@ class Main extends React.Component {
 
 
                 // console.log('duration in seconds: ' + $player.getDuration() + 'number of channels: ' + $player.getNumberOfChannels());
-                playerTimer = $player.getCurrentTime()
                 
+                this.props.setDuration($player.getDuration())
+                playerTimer = setInterval(() => {
+                    //  console.log($player.getCurrentTime())
+                    $player.getCurrentTime((seconds) => {
+                        this.props.setCurrentTime(seconds)
+                    })
+                },1000)
+
                 this.setState({
                     player:$player
                 })
                 $player.play((success) => {
                     console.log("播放结束了")
+                    this.props.restTime()
                     this.playNext()
                 })
             })
         }
+        console.log(player)
+        if(currentSong.songmid && player){
+            if(isPlay){  //播放
+                player.play((success) => {
+                    console.log("播放结束了")
+                    this.props.restTime()
+                    this.playNext()
+                })
+                console.log("播放")
+            }else{
+                console.log("暂停")
+                player.pause()
+            }
+        }
+
 
     }
 
@@ -170,7 +194,7 @@ export default connect(
         loveList: state.loveList,
         userSheet: state.userSheet
     }),
-    { setIndex,setCurrentSongs,playing }
+    { setIndex,setCurrentSongs,playing,restTime,setCurrentTime,setDuration }
 )(Main)
 
 
