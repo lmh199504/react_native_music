@@ -8,7 +8,7 @@ import { AUTH_SUCCESS,AUTH_FAIL,RESET_AUTH,GET_HOME,RESET_PLAYLIST,SET_CURRENT_S
 	SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET,
 	RESET_TIME,SET_CURRENT_TIME,SET_DURATION
 } from './action-types.js'
-import a from '@ant-design/react-native/lib/modal/operation'
+
 
 
 const initUser = {

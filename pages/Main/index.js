@@ -1,7 +1,7 @@
 ﻿
 
 import React from 'react'
-import { Text, TouchableHighlight } from 'react-native'
+import { Text, TouchableHighlight, DeviceEventEmitter } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import HomeDrawer from '../HomeDrawer'
@@ -19,88 +19,101 @@ import DigitalScreen from '../digital'
 import RegisterScreen from '../register'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
-import { setIndex,setCurrentSongs,playing,restTime,setCurrentTime,setDuration } from '../../redux/actions'
+import { setIndex, setCurrentSongs, playing,restTime,setCurrentTime,setDuration } from '../../redux/actions'
+// import styles from '../../components/bottomPlayer/styles';
 
 let playerTimer = null
+let player = null
 
 const Stack = createStackNavigator();
 class Main extends React.Component {
     state = {
         cSong: {},
-        player: null
     }
     componentDidMount = () => {
 
     }
 
     playNext = () => {
-        const { currentIndex,playList } = this.props
-        if(currentIndex<playList.length - 1){
+        const { currentIndex, playList } = this.props
+
+        if (player) {
+            player.release()
+            // player.stop()
+        }
+        if (currentIndex < playList.length - 1) {
             this.props.setIndex(currentIndex + 1)
             this.props.setCurrentSongs(playList[currentIndex + 1])
-        }else{
+        } else {
             this.props.setIndex(0)
             this.props.setCurrentSongs(playList[0])
         }
     }
 
     componentDidUpdate = () => {
-        const { cSong,player } = this.state
-        const { currentSong,isPlay } = this.props
-        let $player = null
+        const { cSong,playList } = this.state
+        const { currentSong, isPlay } = this.props
+        if (currentSong.songmid && player && currentSong.songmid === cSong.songmid) {
+            if (isPlay) {  //播放
+                clearInterval(playerTimer)
+                playerTimer = setInterval(() => {
+                    player.getCurrentTime((seconds) => {
+                        this.props.setCurrentTime(seconds)
+                    })
+                }, 1000)
+
+                player.play((success) => {
+                    this.props.restTime()
+                    clearInterval(playerTimer)
+                    player.release()
+                    if(success){
+                        this.playNext()
+                    }
+                })
+            } else {
+                clearInterval(playerTimer)
+                console.log("清除定时器")
+                player.pause()
+
+            }
+        }
+
         if (currentSong.songmid && currentSong.songmid !== cSong.songmid) {
             this.setState({
                 cSong: currentSong
             })
-
-            if(player){
+            if (player) {
                 player.release()
-                player.stop()
-            }   
-
-            $player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
+            }
+            player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
                 if (error) {
                     console.log('failed to load the sound', error);
+                    if(playList.length !== 1){
+                        this.playNext()
+                    }
                     return;
                 }
-                this.props.playing()
-
-
-                // console.log('duration in seconds: ' + $player.getDuration() + 'number of channels: ' + $player.getNumberOfChannels());
-                
-                this.props.setDuration($player.getDuration())
+                this.props.setDuration(player.getDuration())
                 playerTimer = setInterval(() => {
-                    //  console.log($player.getCurrentTime())
-                    $player.getCurrentTime((seconds) => {
+                    player.getCurrentTime((seconds) => {
                         this.props.setCurrentTime(seconds)
                     })
-                },1000)
+                }, 1000)
 
-                this.setState({
-                    player:$player
-                })
-                $player.play((success) => {
-                    console.log("播放结束了")
+                player.play((success) => {
                     this.props.restTime()
-                    this.playNext()
+                    clearInterval(playerTimer)
+                    player.release()
+                    if(success){
+                        this.playNext()
+                    }
                 })
             })
         }
-        console.log(player)
-        if(currentSong.songmid && player){
-            if(isPlay){  //播放
-                player.play((success) => {
-                    console.log("播放结束了")
-                    this.props.restTime()
-                    this.playNext()
-                })
-                console.log("播放")
-            }else{
-                console.log("暂停")
-                player.pause()
-            }
+        
+        if(!currentSong.songmid && player){
+            player.release()
         }
-
 
     }
 
@@ -125,7 +138,7 @@ class Main extends React.Component {
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         header: () => { return null }
                     }} />
-                    <Stack.Screen name="Register" component={ RegisterScreen } options={{
+                    <Stack.Screen name="Register" component={RegisterScreen} options={{
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         header: () => { return null }
                     }} />
@@ -194,7 +207,7 @@ export default connect(
         loveList: state.loveList,
         userSheet: state.userSheet
     }),
-    { setIndex,setCurrentSongs,playing,restTime,setCurrentTime,setDuration }
+    { setIndex, setCurrentSongs, playing,restTime,setCurrentTime,setDuration }
 )(Main)
 
 

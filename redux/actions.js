@@ -128,11 +128,14 @@ export const setCurrentSongs = (data) => {
 		const re = await reqGetMusicVKey({songmid:data.songmid})
 		if(re.response.req_0.data.midurlinfo[0].vkey !== ''){
 			data.src = re.response.playLists[0]
+			dispatch(playing())
 		}else{
 			data.src = 'http://www.baidu.com'
 			// message.warning('vip歌曲,即将跳过。')
 		}
+		
 		dispatch(setCurrentSong(data))
+		
 	}
 }
 
