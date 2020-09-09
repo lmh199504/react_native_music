@@ -1,7 +1,7 @@
 ﻿
 
 import React from 'react'
-import { Text, TouchableHighlight, DeviceEventEmitter } from 'react-native'
+import { Text, TouchableHighlight, DeviceEventEmitter, View } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, CardStyleInterpolators } from '@react-navigation/stack';
 import HomeDrawer from '../HomeDrawer'
@@ -51,8 +51,8 @@ class Main extends React.Component {
     }
 
     componentDidUpdate = () => {
-        const { cSong,playList } = this.state
-        const { currentSong, isPlay } = this.props
+        const { cSong } = this.state
+        const { currentSong, isPlay,playList } = this.props
         if (currentSong.songmid && player && currentSong.songmid === cSong.songmid) {
             if (isPlay) {  //播放
                 clearInterval(playerTimer)
@@ -132,7 +132,9 @@ class Main extends React.Component {
                     }} />
                     <Stack.Screen name="Play" component={PlayScreen} options={{
                         title: "播放",
-                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        // header: () => { return null }
+                        header: () => { return <View></View> }
                     }} />
                     <Stack.Screen name="Login" component={LoginScreen} options={{
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,

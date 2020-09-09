@@ -125,7 +125,7 @@ class BottomPlayer extends React.Component {
                     maskClosable
                     visible={this.state.visible}
                 >
-                    <ScrollView style={{ paddingVertical: 20, height: 350 }}>
+                    <ScrollView style={{ height: 350,}}>
                         {
                             playList.map((item, index) => (
                                 <View key={index} style={styles.musicItem}>
