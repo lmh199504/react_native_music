@@ -6,7 +6,9 @@ const { height, width } = Dimensions.get("window")
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#292a2b"
+        backgroundColor: "#292a2b",
+        height:null,
+        width:null
     },
     mian_content: {
         flex: 1,
@@ -15,7 +17,6 @@ const styles = StyleSheet.create({
     player_bg: {
         width: "100%",
         height: "100%",
-        // backgroundColor: "red",
         position: "absolute",
         zIndex: -2
     },
@@ -43,18 +44,26 @@ const styles = StyleSheet.create({
         backgroundColor: "#000",
         opacity: 0.3
     },
+    rorateImgView:{
+        width:200,
+        height:200,
+        position:'relative',
+        left:'50%',
+        top:"20%",
+        marginLeft:-100
+    },
     rorateImg: {
         width: 200,
         height: 200,
-        borderRadius: 100
+        borderRadius: 100,
     },
     topTitle: {
         height: 60,
     },
     center_content: {
-        marginTop: 30,
-        height: height - 200,
-        backgroundColor: "red"
+        marginTop: 40,
+        height: height - 250,
+        // backgroundColor: "red"
     },
     foot_content: {
         height: 60
@@ -75,10 +84,80 @@ const styles = StyleSheet.create({
         fontSize: 16
     },
     singerName: {
-        color:'#868b8d'
+        color:'#999'
+    },
+    Swiper:{
+        // backgroundColor:"black"
+    },
+    swiperImg:{
+        position:"relative",
+        height:"100%"
+    },
+    menu_btn:{
+        height:25,
+        width:"100%",
+        // backgroundColor:"red",
+        position:"absolute",
+        bottom:20,
+        flexDirection:'row',
+        justifyContent:'space-between',
+        paddingLeft:40,
+        paddingRight:40
+    },
+    lyricText:{
+        padding:10,
+        textAlign:'center',
+        color:"#CDC5BF"
+    },
+    lyricText_active:{
+        color:"#fff",
+        fontSize:18
+    },
+    lyricText_first:{
+        marginTop:15,
+    },
+    none:{
+        height:160
+    },
+    menu_btn_Image:{
+        width:25,
+        height:25
+    },
+    progress:{
+        flexDirection:'row',
+        justifyContent:'space-between'
+    },
+    currentTime:{
+        width:50,
+        textAlign:'center',
+        color:"#fff"
+    },
+    duration:{
+        width:50,
+        color:"#fff",
+        textAlign:'center',
+    },
+    progressBar:{
+        marginTop:8
+    },
+    playMenu:{
+        flexDirection:"row",
+        justifyContent:'space-between',
+        paddingLeft:40,
+        paddingRight:40,
+        position:'absolute',
+        bottom:-20,
+        width:'100%'
+    },
+    playMenu_item:{
+        width:25,
+        height:25,
+        marginTop:8
+    },
+    playMenu_item_play:{
+        width:40,
+        height:40,
     }
 })
 
 export default styles
-
-//#868b8d

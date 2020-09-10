@@ -1,11 +1,12 @@
 
 import React from 'react'
 import { connect } from 'react-redux'
-import { View, Text, Image, TouchableHighlight, ScrollView, Dimensions, DeviceEventEmitter } from 'react-native'
+import { View, Text, Image, TouchableHighlight,TouchableOpacity, ScrollView, Dimensions, DeviceEventEmitter } from 'react-native'
 import { Modal, Toast } from '@ant-design/react-native'
 import styles from './styles'
 import * as Progress from 'react-native-progress'
 import { playing, stopPlay, resetPlaylist, setIndex, setCurrentSongs, setCurrentSong } from '../../redux/actions'
+import PlayList from '../playList'
 const { width } = Dimensions.get('window')
 class BottomPlayer extends React.Component {
 
@@ -112,36 +113,24 @@ class BottomPlayer extends React.Component {
                         <TouchableHighlight onPress={() => this.togglePlay()} underlayColor="transparent">
                             <Image source={isPlay ? require('./images/zanting.png') : require('./images/bofang.png')} style={styles.playImg} />
                         </TouchableHighlight>
-                        <TouchableHighlight onPress={() => this.setState({ visible: true })}>
+                        <TouchableOpacity onPress={() => this.setState({ visible: true })}>
                             <Image source={require('./images/menu.png')} style={styles.menu_img} />
-                        </TouchableHighlight>
+                        </TouchableOpacity>
                     </View>
                 </View>
+                
 
-                <Modal
+
+                <PlayList onClose={ this.onClose } visible={ this.state.visible }/>
+                {/* <Modal
                     title="播放列表"
                     transparent
                     onClose={this.onClose}
                     maskClosable
                     visible={this.state.visible}
                 >
-                    <ScrollView style={{ height: 350,}}>
-                        {
-                            playList.map((item, index) => (
-                                <View key={index} style={styles.musicItem}>
-                                    <View style={styles.musicItem_left}>
-                                        <Text style={currentSong.songmid === item.songmid ? styles.active_color : styles.musicItem_left_title}>{item.title}</Text>
-
-                                        <Text style={[styles.musicItem_left_singer, currentSong.songmid === item.songmid ? styles.active_color : '']}>{item.singer[0].name}</Text>
-                                    </View>
-                                    <TouchableHighlight underlayColor="#fff" onPress={() => this.delThisSong(item, index)}>
-                                        <Image source={require('./images/close.png')} style={styles.closeImg} />
-                                    </TouchableHighlight>
-                                </View>
-                            ))
-                        }
-                    </ScrollView>
-                </Modal>
+                    
+                </Modal> */}
             </View>
 
         )

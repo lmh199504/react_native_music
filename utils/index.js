@@ -14,6 +14,7 @@ export const formatNum = (num) => {
 //格式化歌曲时间
 
 export const formatSongTime = (time) => {
+    var time = parseInt(time)
 	let min = parseInt( time / 60)
 	let sec = time%60
 	min = min > 9 ? min : '0' + min
