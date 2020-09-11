@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     singerCon:{
         flexDirection:'row',
         flexWrap:'wrap',
+        width:"100%"
     },
     singerItem:{
         width:'25%',
@@ -41,10 +42,9 @@ const styles = StyleSheet.create({
         padding:20
     },
     singerItem_Img:{
-        // width:80,
-        height:width/4 - 40,
+        height:80,
         borderRadius:40,
-        width:width/4 - 40
+        width:80
     },
     singerItem_name:{
         textAlign:"center"

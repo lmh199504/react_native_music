@@ -6,6 +6,7 @@ import {
     ActivityIndicator
 } from '@ant-design/react-native';
 import MyImg from '../../components/Image'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class SingerTab extends React.Component {
 
@@ -54,6 +55,13 @@ class SingerTab extends React.Component {
 
     componentDidMount = () => {
         this.getData()
+    }
+
+    toSingerDetail = (item) => {
+        console.log(item)
+        this.props.navigation.navigate('singerDetails', {
+            singermid: item.singer_mid,
+        })
     }
 
     render() {
@@ -130,12 +138,14 @@ class SingerTab extends React.Component {
                 <View style={styles.singerCon}>
                     {
                         singerlist.map((item, index) => (
-                            <View key={index} style={styles.singerItem}>
-                                <View style={styles.singerItem_ImgCon}>
-                                    <MyImg style={styles.singerItem_Img} source={{ uri: item.singer_pic }} uri={item.singer_pic }/>
+                            <TouchableHighlight onPress={() => this.toSingerDetail(item)} key={index} style={styles.singerItem} underlayColor="transparent">
+                                <View>
+                                    <View style={styles.singerItem_ImgCon}>
+                                        <MyImg style={styles.singerItem_Img} source={{ uri: item.singer_pic }} uri={item.singer_pic} />
+                                    </View>
+                                    <Text style={styles.singerItem_name}>{item.singer_name}</Text>
                                 </View>
-                                <Text style={styles.singerItem_name}>{item.singer_name}</Text>
-                            </View>
+                            </TouchableHighlight>
                         ))
                     }
                 </View>

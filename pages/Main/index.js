@@ -17,9 +17,12 @@ import SingerScreen from '../singer'
 import MVScreen from '../mv'
 import DigitalScreen from '../digital'
 import RegisterScreen from '../register'
+import SingerDetails from '../singerDetail'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
-import { setIndex, setCurrentSongs, playing,restTime,setCurrentTime,setDuration } from '../../redux/actions'
+
+
+import { setIndex, setCurrentSongs, playing, restTime, setCurrentTime, setDuration } from '../../redux/actions'
 // import styles from '../../components/bottomPlayer/styles';
 
 let playerTimer = null
@@ -52,7 +55,7 @@ class Main extends React.Component {
 
     componentDidUpdate = () => {
         const { cSong } = this.state
-        const { currentSong, isPlay,playList } = this.props
+        const { currentSong, isPlay, playList } = this.props
         if (currentSong.songmid && player && currentSong.songmid === cSong.songmid) {
             if (isPlay) {  //播放
                 clearInterval(playerTimer)
@@ -66,7 +69,7 @@ class Main extends React.Component {
                     this.props.restTime()
                     clearInterval(playerTimer)
                     player.release()
-                    if(success){
+                    if (success) {
                         this.playNext()
                     }
                 })
@@ -88,7 +91,7 @@ class Main extends React.Component {
             player = new Sound(currentSong.src, Sound.MAIN_BUNDLE, (error) => {
                 if (error) {
                     console.log('failed to load the sound', error);
-                    if(playList.length !== 1){
+                    if (playList.length !== 1) {
                         this.playNext()
                     }
                     return;
@@ -104,14 +107,14 @@ class Main extends React.Component {
                     this.props.restTime()
                     clearInterval(playerTimer)
                     player.release()
-                    if(success){
+                    if (success) {
                         this.playNext()
                     }
                 })
             })
         }
-        
-        if(!currentSong.songmid && player){
+
+        if (!currentSong.songmid && player) {
             player.release()
         }
 
@@ -193,6 +196,14 @@ class Main extends React.Component {
                         headerTitleAlign: "center",
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                     }} />
+
+                    <Stack.Screen name="singerDetails" component={SingerDetails} options={{
+                        title: "",
+                        headerTitleAlign: "center",
+                        header:() => { return null },
+                        gesturesEnabled: false,
+                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                    }} />
                 </Stack.Navigator>
             </NavigationContainer>
         )
@@ -209,7 +220,7 @@ export default connect(
         loveList: state.loveList,
         userSheet: state.userSheet
     }),
-    { setIndex, setCurrentSongs, playing,restTime,setCurrentTime,setDuration }
+    { setIndex, setCurrentSongs, playing, restTime, setCurrentTime, setDuration }
 )(Main)
 
 
