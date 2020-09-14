@@ -58,7 +58,6 @@ class SingerTab extends React.Component {
     }
 
     toSingerDetail = (item) => {
-        console.log(item)
         this.props.navigation.navigate('singerDetails', {
             singermid: item.singer_mid,
         })

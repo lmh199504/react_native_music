@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
         height: 60
     },
     topTitle: {
+        marginTop:20,
         flexDirection: 'row'
     },
     goBack: {

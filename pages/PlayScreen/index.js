@@ -38,7 +38,7 @@ class PlayScreen extends React.Component {
             reqGetLyric({ songmid: currentSong.songmid }).then(res => {
                 if (res.response.code === 0) {
                     const lyric = new Lyric(res.response.lyric, this.handleLyric)
-                    lyric.seek(musictime.currentTime * 1000)
+                    lyric.seek(musictime.currentTime * 1000 + 4000)
                     lyric.stop()
                 } else {
                     console.log('获取歌词失败')
@@ -47,6 +47,9 @@ class PlayScreen extends React.Component {
         }
     }
 
+
+
+
     componentDidUpdate = () => {
         const { currentSong, isPlay, musictime } = this.props
         const { cSong, currentLyric } = this.state
@@ -54,8 +57,6 @@ class PlayScreen extends React.Component {
             this.setState({
                 cSong: currentSong
             })
-
-            console.log("-----------------")
 
             if (currentLyric) {
                 currentLyric.stop()
@@ -79,7 +80,7 @@ class PlayScreen extends React.Component {
                     lyric.play()
                     if (isPlay || musictime.currentTime) {
                         // 这个时候有可能用户已经播放了歌曲，要切到对应位置
-                        lyric.seek(musictime.currentTime * 1000)
+                        lyric.seek(musictime.currentTime * 1000 + 4000)  //好像有点延迟
                     }
                 } else {
                     console.log('获取歌词失败')
@@ -96,7 +97,7 @@ class PlayScreen extends React.Component {
         // Will change fadeAnim value to 0 in 5 seconds
         Animated.loop(
             Animated.timing(this.state.rotateValue, {
-                toValue: -360,
+                toValue: 360,
                 duration: 10000,
                 useNativeDriver: true,
                 isInteraction: false,
@@ -125,6 +126,8 @@ class PlayScreen extends React.Component {
         if (!this.refs.lyricLine0) {
             return
         }
+
+
         this.setState({
             currentLineNum: lineNum
         })
@@ -146,6 +149,8 @@ class PlayScreen extends React.Component {
 
             this.refs.lyricList.scrollTo({ x: 0, y: 0 })
         }
+
+
 
     }
 
@@ -231,6 +236,14 @@ class PlayScreen extends React.Component {
         })
     }
 
+    toSingerDetail = () => {
+        const { currentSong } = this.props
+
+        this.props.navigation.navigate('singerDetails', {
+            singermid: currentSong.singer[0].mid,
+        })
+    }
+
     render() {
         const { currentSong, musictime, isPlay } = this.props
         const { currentLineNum, currentLyric, rotateValue } = this.state
@@ -244,8 +257,7 @@ class PlayScreen extends React.Component {
 
         return (
             <View style={styles.container}>
-                <StatusBar barStyle="dark-content" backgroundColor='transparent' />
-
+                <StatusBar barStyle='light-content' backgroundColor='rgba(0,0,0,0)' translucent={true}></StatusBar>
                 <View style={styles.absolute}>
                     <View style={styles.player_bg}>
                         <Image
@@ -273,7 +285,10 @@ class PlayScreen extends React.Component {
                         </View>
                         <View style={styles.muiscInfo}>
                             <Text style={styles.songname}>{currentSong.title ? currentSong.title : ''}</Text>
-                            <Text style={styles.singerName}>{currentSong.singer ? currentSong.singer[0].name : ''}</Text>
+                            <TouchableOpacity onPress={ () => this.toSingerDetail() }>
+                                <Text style={styles.singerName}>{currentSong.singer ? currentSong.singer[0].name : ''}</Text>
+                            </TouchableOpacity>
+
                         </View>
                     </View>
 
@@ -373,7 +388,7 @@ class PlayScreen extends React.Component {
 
 
 
-                <PlayList visible={ this.state.visible } onClose={this.onClose}/>
+                <PlayList visible={this.state.visible} onClose={this.onClose} />
 
             </View>
         )

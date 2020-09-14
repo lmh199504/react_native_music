@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        paddingBottom:15
     },
     backgroundImage: {
         height:'100%',
@@ -64,7 +65,8 @@ const styles = StyleSheet.create({
         position:"absolute",
         bottom:0,
         padding:15,
-        zIndex:3
+        zIndex:3,
+        width:"100%"
     },
     bigSingerName:{
         color:"#fff",
@@ -86,7 +88,9 @@ const styles = StyleSheet.create({
     },
     btnContainer:{
         flexDirection:'row',
-        justifyContent:'space-between'
+        width:"100%",
+        justifyContent:'space-between',
+        marginTop:15
     },
     btn_img:{
         width:30,
@@ -94,6 +98,161 @@ const styles = StyleSheet.create({
     },
     ruzhuName:{
         color:"#fff"
+    },
+    mybtn:{
+        flexDirection:'row',
+        height:30,
+        backgroundColor:'rgba(255,255,255,0.4)',
+        borderRadius:15,
+        paddingLeft:10,
+        paddingRight:10
+    },
+    rightBtn:{
+        flexDirection:'row'
+    },
+    white_btn_text:{
+        color:"#fff",
+        marginLeft:5,
+        lineHeight:30
+    },
+    attentionImg:{
+        width:15,
+        height:15,
+        marginTop:7,
+        marginLeft:5
+    },
+    attention:{
+        marginRight:15,
+        backgroundColor:"#fff"
+    },
+    attentionText:{
+        marginLeft:5,
+        lineHeight:30
+    },
+    xiaoxiText:{
+        color:"#fff",
+        lineHeight:30
+    },
+    xiaoxiImg:{
+        width:20,
+        height:20,
+        marginTop:5,
+        marginRight:5
+    },
+    playAllImg:{
+        width:20,
+        height:20,
+        marginTop:5,
+        marginRight:5
+    },
+    playBtn:{
+        width:"100%",
+        justifyContent:"space-between",
+        flexDirection:'row',
+        marginBottom:15,
+        marginTop:15
+        // backgroundColor:"red"
+    },
+    playBtnCon:{
+        flexDirection:'row',
+        height:30,
+        backgroundColor:'rgba(255,255,255,1)',
+        borderRadius:15,
+        paddingHorizontal:5,
+        marginRight:20
+    },
+    playAllText:{
+        lineHeight:30
+    },
+    tabsItem:{
+        paddingHorizontal:15,
+    },
+    songItem:{
+        flexDirection:'row',
+        justifyContent:'space-between',
+        marginBottom:15
+    },
+    songIndex:{
+        color:"#b3b3b3",
+        // marginRight:30,
+        width:40
+    },
+    songIndex_Text:{
+        color:"#b3b3b3",
+        marginTop:10
+    },
+    songItem_left:{
+        flexDirection:'row'
+    },
+    songItem_right:{
+        flexDirection:'row'
+    },
+    right_playImg:{
+        width:20,
+        height:20
+    },
+    moreImg:{
+        marginRight:20,
+        height:20,
+        width:20,
+        marginLeft:20
+    },
+    songsItem_singer:{
+        fontSize:12,
+        color:"#b3b3b3",
+    },
+    albumlist_item:{
+        width:"50%"
+    },
+    albumList:{
+        flexDirection:'row',
+        flexWrap:'wrap'
+    },
+    albumlist_itemBox:{
+        padding:10
+    },
+    albumList_img:{
+        width:"100%",
+        height:160
+    },
+    albumName:{
+        marginTop:10
+    },
+    publishDate:{
+        marginTop:10,
+        color:'#999'
+    },
+    JIANJIE:{
+        marginTop:20,
+        color:"#000",
+        fontSize:16,
+        fontWeight:'bold'
+    },
+    destText:{
+        color:"#000",
+        lineHeight:30,
+        marginTop:10
+    },
+    similarSinger:{
+        flexWrap:'wrap',
+        marginTop:15,
+        flexDirection:'row'
+    },
+    similarSingerItem:{
+        width:'50%',
+        marginBottom:10
+    },
+    similarBox_text:{
+        textAlign:'center'
+    },
+    similarBox_Img:{
+        width:150,
+        height:150,
+        borderRadius:75,
+        position:'relative',
+        left:"50%",
+        marginLeft:-75,
+        marginBottom:10
     }
 })
 
