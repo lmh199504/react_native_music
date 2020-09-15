@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     ScrollView:{
         width:'100%',
         padding:15,
-        marginBottom:50 
+        marginBottom:10 
     },
     container:{
         flexDirection:"row",

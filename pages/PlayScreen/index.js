@@ -8,7 +8,6 @@ import {
 
 import { connect } from 'react-redux'
 import * as Progress from 'react-native-progress'
-import { Modal } from '@ant-design/react-native'
 import styles from './style'
 import { reqGetLyric } from '../../api'
 import Lyric from 'lyric-parser'
@@ -153,7 +152,7 @@ class PlayScreen extends React.Component {
 
 
     }
-
+    //SWIPER 切换的时候
     _onIndexChanged = (index) => {
         const { currentLyric } = this.state
         const { musictime } = this.props

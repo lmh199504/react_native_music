@@ -18,6 +18,7 @@ import MVScreen from '../mv'
 import DigitalScreen from '../digital'
 import RegisterScreen from '../register'
 import SingerDetails from '../singerDetail'
+import ClassDetail from '../classDetail'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
 
@@ -52,6 +53,8 @@ class Main extends React.Component {
             this.props.setCurrentSongs(playList[0])
         }
     }
+
+
 
     componentDidUpdate = () => {
         const { cSong } = this.state
@@ -200,8 +203,14 @@ class Main extends React.Component {
                     <Stack.Screen name="singerDetails" component={SingerDetails} options={{
                         title: "",
                         headerTitleAlign: "center",
-                        header:() => { return null },
+                        header: () => { return null },
                         gesturesEnabled: false,
+                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                    }} />
+
+                    <Stack.Screen name="ClassDetail" component={ClassDetail} options={{
+                        title: "歌单详情",
+                        headerTitleAlign: "center",
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                     }} />
                 </Stack.Navigator>

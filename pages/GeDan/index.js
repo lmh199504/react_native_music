@@ -38,23 +38,23 @@ class GeDan extends React.Component{
             <View style={{ flex: 1 }}>
                 <Tabs  tabs={tabs} swipeable={true} tabBarActiveTextColor="#f73c40" tabBarInactiveTextColor="#000" tabBarUnderlineStyle={{ backgroundColor:"#f73c40" }}>
                     <View style={style}>
-                        <GeDanItem titleid={ -1 }/>
+                        <GeDanItem titleid={ -1 } {...this.props}/>
                     </View>
                     <View style={style}>
-                        <GeDanItem titleid={ 3317 }/>
+                        <GeDanItem titleid={ 3317 }  {...this.props}/>
                     </View>
                     <View style={style}>
-                        <GeDanItem titleid={ 71 }/>
+                        <GeDanItem titleid={ 71 } {...this.props}/>
                     </View>
 
                     <View style={style}>
-                        <GeDanItem titleid={ 3056 }/>
+                        <GeDanItem titleid={ 3056 } {...this.props}/>
                     </View>
                     <View style={style}>
-                        <GeDanItem titleid={ 59 }/>
+                        <GeDanItem titleid={ 59 } {...this.props}/>
                     </View>
                     <View style={style}>
-                        <GeDanItem titleid={ 64 }/>
+                        <GeDanItem titleid={ 64 } {...this.props}/>
                     </View>
                 </Tabs>
             </View>

@@ -8,7 +8,7 @@ import { AUTH_SUCCESS,AUTH_FAIL,RESET_AUTH,GET_HOME,RESET_PLAYLIST,SET_CURRENT_S
 // import Cookies from 'js-cookie'
 import AsyncStorage from '@react-native-community/async-storage'
 import { reqLogin,reqGetUserInfo,reqLogout,reqRegister,reqGetHome,reqGetSongListDetail,reqGetMusicVKey,
-	reqGetLoveSong,reqGetLoveSinger,reqGetLoveSheet,reqGetUserSheet
+	reqGetLoveSong,reqGetLoveSinger,reqGetLoveSheet,reqGetUserSheet,reqGetUserInfoById
  
  } from '../api/index'
 import Song from '../utils/Song.js'
@@ -42,8 +42,13 @@ export const login = (data) => {
 
 export const getUserInfo = (data) => {
 	return async dispatch => {
-		const response = await reqGetUserInfo(data)
+		// const response = await reqGetUserInfo(data)
+		const userId = await AsyncStorage.getItem('userId')
+		const response = await reqGetUserInfoById({
+			userId
+		})
 		
+
 		if(response.code === 0){
 			dispatch(authSuccess(response.data))
 			dispatch(setLoveLists())
