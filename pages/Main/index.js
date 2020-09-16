@@ -211,6 +211,7 @@ class Main extends React.Component {
                     <Stack.Screen name="ClassDetail" component={ClassDetail} options={{
                         title: "歌单详情",
                         headerTitleAlign: "center",
+                        header: () => { return null },
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                     }} />
                 </Stack.Navigator>
