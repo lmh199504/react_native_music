@@ -4,7 +4,10 @@ import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
 import NewItem from './newItem'
+
 class NewSong extends React.Component {
+
+    
     render() {
 
         const tabs = [
@@ -18,9 +21,11 @@ class NewSong extends React.Component {
 
         return (
             <View style={{ flex: 1 }}>
-                <Text style={ {textAlign:'center',padding:10,fontSize:16} }>
-                    新歌首发
-                </Text>
+                <View>
+                    <Text style={ {textAlign:'center',padding:10,fontSize:16} }>
+                        新歌首发
+                    </Text>
+                </View>
                 <Tabs
                     tabs={tabs}
                     renderTabBar={tabProps => (

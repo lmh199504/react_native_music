@@ -1,12 +1,14 @@
 
 
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import styles from './styles'
 import { reqGetHomeNewSong } from '../../../../api'
 import PropTypes from 'prop-types'
 import MyImg from '../../../../components/Image'
-import { ScrollView } from 'react-native-gesture-handler'
+import Song from '../../../../utils/Song'
+import { connect } from 'react-redux'
+import { setIndex, setCurrentSongs, resetPlaylist } from '../../../../redux/actions'
 import { ActivityIndicator } from '@ant-design/react-native'
 class NewItem extends React.Component {
 
@@ -43,35 +45,63 @@ class NewItem extends React.Component {
             })
         })
     }
+    playAll = () => {
+        const { songList } = this.state
+        const playList = []
+        songList.forEach((item, index) => {
+            let song = new Song(item)
+            if (index === 0) {
+                console.log(song)
+                this.props.setIndex(index)
+                this.props.setCurrentSongs(song)
+            }
+            playList.push(song)
+        })
+        this.props.resetPlaylist(playList)
+
+    }
 
     render() {
-        const { songList,loading } = this.state
+        const { songList, loading } = this.state
         return (
-            <ScrollView>
+            <View style={styles.flex}>
+                <TouchableOpacity onPress={() => this.playAll()}>
+                    <View style={styles.playAll}>
+                        <Text style={{ lineHeight: 30, color: '#fff', textAlign: 'center' }}>播放全部</Text>
+                    </View>
+                </TouchableOpacity>
                 <ActivityIndicator
                     animating={loading}
                     size="large"
                     text="Loading..."
                     style={styles.loading}
                 />
-                <View style={styles.container}>
-                    {
-                        songList.map((item, index) => (
-                            <View style={styles.item} key={index}>
-                                <View style={styles.item_box}>
-                                    <View>
-                                        <MyImg uri={`https://y.gtimg.cn/music/photo_new/T002R90x90M000${item.album.pmid}.jpg?max_age=2592000`} style={styles.coverImg} />
+                <View style={{ width: "100%" }}>
+                    <ScrollView >
+                        <View style={styles.container}>
+                            {
+                                songList.map((item, index) => (
+                                    <View style={styles.item} key={index}>
+                                        <View style={styles.item_box}>
+                                            <View>
+                                                <MyImg uri={`https://y.gtimg.cn/music/photo_new/T002R90x90M000${item.album.pmid}.jpg?max_age=2592000`} style={styles.coverImg} />
+                                            </View>
+                                            <Text numberOfLines={1}>{item.title}</Text>
+                                            <Text numberOfLines={1} style={styles.singer}>{item.singer[0].name}</Text>
+                                        </View>
                                     </View>
-                                    <Text numberOfLines={1}>{item.title}</Text>
-                                    <Text numberOfLines={1} style={styles.singer}>{item.singer[0].name}</Text>
-                                </View>
-                            </View>
-                        ))
-                    }
+                                ))
+                            }
+                        </View>
+                    </ScrollView>
                 </View>
-            </ScrollView>
+            </View>
+
         )
     }
 }
 
-export default NewItem
+export default connect(
+    state => ({}),
+    { resetPlaylist, setIndex, setCurrentSongs }
+)(NewItem) 

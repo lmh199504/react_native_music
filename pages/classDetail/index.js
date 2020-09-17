@@ -1,12 +1,20 @@
 
 
 import React from 'react'
-import { View, StatusBar, ScrollView, ImageBackground, Image, TouchableHighlight, Text } from 'react-native'
+import {
+    View, StatusBar, ScrollView,
+    Image, TouchableHighlight, Text, TouchableOpacity
+} from 'react-native'
 import { reqGetSongListDetail } from '../../api'
-import { ActivityIndicator } from '@ant-design/react-native'
+import { ActivityIndicator,Toast } from '@ant-design/react-native'
 import { BlurView } from '@react-native-community/blur'
 import MyImg from '../../components/Image'
+import SongList from '../../components/songList'
 import styles from './styles'
+import Song from '../../utils/Song'
+import BottomPlayer from '../../components/bottomPlayer'
+import { connect } from 'react-redux'
+import { setIndex,setCurrentSongs,resetPlaylist } from '../../redux/actions'
 class ClassDetail extends React.Component {
 
     state = {
@@ -14,8 +22,8 @@ class ClassDetail extends React.Component {
         list: [],
         desc: '',
         tags: [],
-        logo: '',
-        headurl: '',
+        logo: 'https://reactlmh.oss-cn-beijing.aliyuncs.com/heaher/23073179092.jpg',
+        headurl: 'https://reactlmh.oss-cn-beijing.aliyuncs.com/heaher/23073179092.jpg',
         visitnum: 0,
         dissname: '',
         loading: false,
@@ -40,8 +48,16 @@ class ClassDetail extends React.Component {
             list.forEach((item, index) => {
                 item.key = index
             })
+
+            let playList = []
+            list.forEach((item, index) => {
+                let song = new Song(item)
+                playList.push(song)
+            })
+
+
             this.setState({
-                list: list,
+                list: playList,
                 desc,
                 tags,
                 logo,
@@ -55,20 +71,37 @@ class ClassDetail extends React.Component {
                 loading: false
             })
         })
+
     }
+
+
+    playAll = () => {
+        const { list } = this.state
+        if(list.length !== 0){
+            this.props.setIndex(0)
+            this.props.setCurrentSongs(list[0])
+            this.props.resetPlaylist(list)
+        }else{
+            Toast.info('暂无歌曲')
+        }
+    }
+
+
 
     render() {
         const { list, logo, visitnum, desc, dissname, tags, loading, nickname, disstid, headurl } = this.state
-
+        const statusBarHeight = StatusBar.currentHeight;
         return (
             <View style={styles.container}>
-                <StatusBar barStyle='light-content' backgroundColor='rgba(0,0,0,0)' translucent={true}></StatusBar>
+                <StatusBar barStyle='light-content' backgroundColor='rgba(0,0,0,0)' translucent={true} ></StatusBar>
 
                 <View style={styles.topMsg}>
                     <View style={styles.topBg}>
                         <MyImg uri={logo} style={styles.ImageBackground} />
                     </View>
+                    <View style={styles.top_mask}>
 
+                    </View>
                     <BlurView
                         blurType="light"
                         blurAmount={60}
@@ -76,19 +109,23 @@ class ClassDetail extends React.Component {
                         style={styles.absolute}
                     />
 
-                    <View style={ styles.topInfo }>
-                        <View>
-                            <MyImg uri={logo} style={ styles.logo }/>
+                    <View style={styles.topInfo}>
+                        <View style={styles.leftLogo}>
+                            <MyImg uri={logo} style={styles.logo} />
                         </View>
-                        <View>
-                            <Text>
+                        <View style={styles.right_Info}>
+                            <Text style={styles.dissname} >
                                 {dissname}
                             </Text>
-                            <View>
-                                <MyImg uri={ headurl } />
-                                <Text>{ nickname }</Text>
+                            <View style={styles.userInfo}>
+                                <MyImg uri={headurl} style={styles.headurl} />
+                                <Text style={styles.nickname} >{nickname}</Text>
                             </View>
+                            <Text style={styles.desc} numberOfLines={5}>
+                                {desc}
+                            </Text>
                         </View>
+
                     </View>
 
                 </View>
@@ -103,7 +140,27 @@ class ClassDetail extends React.Component {
                         <Text style={styles.songname}>歌单</Text>
                     </View>
                 </View>
+
+                <View style={styles.playMenuCon} >
+                    <TouchableOpacity onPress={ () => this.playAll() }>
+                        <View style={styles.left_play}>
+                            <Image source={require('./images/play.png')} style={styles.playIcon} />
+                            <Text style={styles.playAll_Text}>播放全部</Text>
+                            <Text style={styles.songNum}>(共30首)</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <View style={styles.right_add}>
+                            <Image source={require('./images/add.png')} style={styles.addImage} />
+                            <Text style={styles.right_add_Text}>收藏</Text>
+                        </View>
+                    </TouchableOpacity>
+
+                </View>
                 <ScrollView style={styles.ScrollView}>
+                    <View style={{ paddingBottom: 60 }}>
+                        <SongList songList={list}></SongList>
+                    </View>
 
                 </ScrollView>
 
@@ -111,9 +168,13 @@ class ClassDetail extends React.Component {
                     animating={loading}
                     text="加载中...."
                     toast />
+                <BottomPlayer {...this.props} currentHeight={statusBarHeight} />
             </View>
         )
     }
 }
 
-export default ClassDetail
+export default connect(
+    state=>({}),
+    {setIndex,setCurrentSongs,resetPlaylist}
+)(ClassDetail)

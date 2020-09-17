@@ -46,9 +46,12 @@ class GeDanTab extends React.Component {
                                 {
                                     item.items.map((category, i) => (
                                         <View key={i} style={styles.name_item}>
-                                            <View style={styles.name_item_box}>
-                                                <Text style={styles.name_item_Text}>{category.categoryName}</Text>
-                                            </View>
+                                            <TouchableOpacity onPress={ () => this.props.navigation.navigate("ClassiFied") }>
+                                                <View style={styles.name_item_box}>
+                                                    <Text style={styles.name_item_Text}>{category.categoryName}</Text>
+                                                </View>
+                                            </TouchableOpacity>
+
                                         </View>
                                     ))
                                 }

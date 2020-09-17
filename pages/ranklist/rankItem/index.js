@@ -1,15 +1,18 @@
 
 
 import React from 'react'
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import PropTypes from 'prop-types'
 import styles from '../styles'
 import MyImg from '../../../components/Image'
 import { reqGetRanks } from '../../../api'
-
+import  Song  from '../../../utils/Song'
 import {
-    ActivityIndicator
+    ActivityIndicator,
+    Toast 
 } from '@ant-design/react-native';
+import { connect } from 'react-redux'
+import { setIndex,setCurrentSongs,resetPlaylist } from '../../../redux/actions'
 class RankItem extends React.Component {
     static propTypes = {
         topId: PropTypes.number.isRequired,
@@ -49,6 +52,22 @@ class RankItem extends React.Component {
         })
     }
 
+    playAll = () => {
+		const { data } = this.state
+		let playList = []
+		data.forEach((item,index) => {
+			let song = new Song(item)
+			playList.push(song)
+			if(index === 0){
+				this.props.setIndex(0)
+				this.props.setCurrentSongs(song)
+			}
+		})
+		this.props.resetPlaylist(playList)
+
+        Toast.info('播放歌曲')
+	}
+
 
     render() {
 
@@ -67,10 +86,13 @@ class RankItem extends React.Component {
                         <View>
                             <View style={styles.main_title}>
                                 <Text style={styles.main_title_text}>{name}</Text>
-                                <View style={styles.more_con}>
-                                    <Text style={styles.more}>播放全部</Text>
-                                    <Image style={styles.more_img} source={require('../images/right.png')} />
-                                </View>
+                                <TouchableOpacity onPress={ () => this.playAll() }>
+                                    <View style={styles.more_con}>
+                                        <Text style={styles.more}>播放全部</Text>
+                                        <Image style={styles.more_img} source={require('../images/right.png')} />
+                                    </View>
+                                </TouchableOpacity>
+
                             </View>
                             <View style={styles.rankCon}>
                                 {
@@ -94,4 +116,7 @@ class RankItem extends React.Component {
 
 }
 
-export default RankItem
+export default connect(
+    state=>({}),
+    {  setIndex,setCurrentSongs,resetPlaylist  }
+)(RankItem)

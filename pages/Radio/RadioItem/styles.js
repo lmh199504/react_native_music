@@ -5,7 +5,7 @@ import { StyleSheet } from 'react-native'
 const styles = StyleSheet.create({
     ScrollView:{
         width:'100%',
-        padding:15,
+        // padding:15,
         marginBottom:50
     },
     container:{

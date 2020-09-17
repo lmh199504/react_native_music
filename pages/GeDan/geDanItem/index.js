@@ -31,7 +31,7 @@ class GenDanItem extends React.Component {
 
     toClassDetail = (item) => {
         this.props.navigation.navigate('ClassDetail',{
-            disstid:item.content_id
+            disstid:item.content_id ? item.content_id : item.tid
         })
     }
     getData = () => {

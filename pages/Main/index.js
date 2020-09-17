@@ -19,6 +19,8 @@ import DigitalScreen from '../digital'
 import RegisterScreen from '../register'
 import SingerDetails from '../singerDetail'
 import ClassDetail from '../classDetail'
+import ClassiFied from '../classified'
+
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
 
@@ -159,6 +161,15 @@ class Main extends React.Component {
                             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
                         })
                     } />
+                    <Stack.Screen name="ClassiFied" component={ClassiFied} options={
+                        ({ navigation }) => ({
+                            title: "歌单",
+                            headerTitleAlign: "center",
+                            headerRight: () => <ToTab navigation={navigation} />,
+                            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+                        })
+                    } />
+
                     <Stack.Screen name="GeDanTab" component={GeDanTabScreen} options={{
                         title: "全部歌单",
                         headerTitleAlign: "center",

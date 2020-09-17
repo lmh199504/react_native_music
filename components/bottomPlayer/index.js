@@ -2,12 +2,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { View, Text, Image, TouchableHighlight,TouchableOpacity, ScrollView, Dimensions, DeviceEventEmitter } from 'react-native'
-import { Modal, Toast } from '@ant-design/react-native'
+import { Toast } from '@ant-design/react-native'
 import styles from './styles'
 import * as Progress from 'react-native-progress'
 import { playing, stopPlay, resetPlaylist, setIndex, setCurrentSongs, setCurrentSong } from '../../redux/actions'
 import PlayList from '../playList'
-const { width } = Dimensions.get('window')
+const { width,height } = Dimensions.get('window')
 class BottomPlayer extends React.Component {
 
     state = {
@@ -91,10 +91,10 @@ class BottomPlayer extends React.Component {
     render() {
 
         const { currentSong, playList, isPlay, musictime } = this.props
-        // const { musictime } = this.state
-        // console.log(musictime)
+        let  { currentHeight } = this.props 
+        currentHeight = currentHeight ? currentHeight : 0
         return (
-            <View style={styles.container}>
+            <View style={[styles.container,{top:height - 50 + currentHeight}]}>
                 <Progress.Bar style={{ marginLeft: 5 }} progress={musictime.currentTime && musictime.duration ? musictime.currentTime / musictime.duration : 0} width={width - 10} height={1} borderColor="transparent" color="#fe4c3d" unfilledColor="gray" />
                 <View style={styles.container_box}>
                     <TouchableHighlight onPress={ () => this.props.navigation.navigate("Play") } style={ styles.touchLeft } underlayColor="transparent">

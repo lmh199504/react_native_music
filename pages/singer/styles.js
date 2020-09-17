@@ -42,9 +42,9 @@ const styles = StyleSheet.create({
         padding:20
     },
     singerItem_Img:{
-        height:80,
-        borderRadius:40,
-        width:80
+        height:60,
+        borderRadius:30,
+        width:60
     },
     singerItem_name:{
         textAlign:"center"

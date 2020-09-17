@@ -6,8 +6,6 @@ import {
     ActivityIndicator
 } from '@ant-design/react-native';
 import MyImg from '../../components/Image'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-
 class SingerTab extends React.Component {
 
     state = {
@@ -27,14 +25,17 @@ class SingerTab extends React.Component {
 
     getData = () => {
         const { param } = this.state
+        console.log(param)
         this.setState({
             loading: true
         })
         reqGetSingerList(param).then(res => {
+            const { singerlist } = this.state
+
             this.setState({
                 tags: res.response.singerList.data.tags,
                 total: res.response.singerList.data.total,
-                singerlist: res.response.singerList.data.singerlist,
+                singerlist: singerlist.concat(res.response.singerList.data.singerlist),
                 loading: false
             })
         }).catch(() => {
@@ -46,6 +47,13 @@ class SingerTab extends React.Component {
 
     setParam = (name, value) => {
         const { param } = this.state
+        
+        if(name != 'page'){
+            param.page = 1
+            this.setState({
+                singerlist:[]
+            })
+        }
         param[name] = value
         this.setState({
             param
@@ -63,6 +71,23 @@ class SingerTab extends React.Component {
         })
     }
 
+
+    _contentViewScroll = (e) => {
+        const { total, singerlist } = this.state
+        var offsetY = e.nativeEvent.contentOffset.y; //滑动距离
+        var contentSizeHeight = e.nativeEvent.contentSize.height; //scrollView contentSize高度
+        var oriageScrollHeight = e.nativeEvent.layoutMeasurement.height; //scrollView高度
+        console.log(offsetY, contentSizeHeight, oriageScrollHeight)
+        if (offsetY + oriageScrollHeight >= contentSizeHeight - 5) {
+            console.log('上传滑动到底部事件')
+            if (singerlist.length !== total - 1) {
+                const { page } = this.state.param
+                this.setParam('page', page + 1)
+            }
+
+        }
+    }
+
     render() {
 
         const { tags, param, total, singerlist, loading } = this.state
@@ -70,86 +95,95 @@ class SingerTab extends React.Component {
             return null
         }
         return (
-            <ScrollView style={styles.ScrollView} >
+
+            <View>
                 <ActivityIndicator
                     animating={loading}
                     size="large"
+                    toast
                     text="Loading..."
                 />
-                <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
-                    {
-                        tags.index.map(item => (
-                            <TouchableHighlight underlayColor='#f73c40' key={item.id} onPress={() => this.setParam('index', item.id)} style={[styles.tabItem, item.id === param.index ? styles.tabItemActive : '']}>
-                                <View>
-                                    <Text style={[styles.tabName, item.id === param.index ? styles.tabNameActive : '']}>
-                                        {item.name}
-                                    </Text>
-                                </View>
-                            </TouchableHighlight>
+                <ScrollView style={styles.ScrollView}
+                    onMomentumScrollEnd={this._contentViewScroll}
+                >
 
-                        ))
-                    }
-                </ScrollView>
-                <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
-                    {
-                        tags.area.map(item => (
-                            <TouchableHighlight key={item.id} onPress={() => this.setParam('area', item.id)} style={[styles.tabItem, item.id === param.area ? styles.tabItemActive : '']}>
-                                <View>
-                                    <Text style={[styles.tabName, item.id === param.area ? styles.tabNameActive : '']}>
-                                        {item.name}
-                                    </Text>
-                                </View>
-                            </TouchableHighlight>
-
-                        ))
-                    }
-                </ScrollView>
-                <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
-                    {
-                        tags.sex.map(item => (
-                            <TouchableHighlight key={item.id} onPress={() => this.setParam('sex', item.id)} style={[styles.tabItem, item.id === param.sex ? styles.tabItemActive : '']}>
-                                <View>
-                                    <Text style={[styles.tabName, item.id === param.sex ? styles.tabNameActive : '']}>
-                                        {item.name}
-                                    </Text>
-                                </View>
-                            </TouchableHighlight>
-
-                        ))
-                    }
-                </ScrollView>
-
-                <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
-                    {
-                        tags.genre.map(item => (
-                            <TouchableHighlight key={item.id} onPress={() => this.setParam('genre', item.id)} style={[styles.tabItem, item.id === param.genre ? styles.tabItemActive : '']}>
-                                <View>
-                                    <Text style={[styles.tabName, item.id === param.genre ? styles.tabNameActive : '']}>
-                                        {item.name}
-                                    </Text>
-                                </View>
-                            </TouchableHighlight>
-
-                        ))
-                    }
-                </ScrollView>
-
-                <View style={styles.singerCon}>
-                    {
-                        singerlist.map((item, index) => (
-                            <TouchableHighlight onPress={() => this.toSingerDetail(item)} key={index} style={styles.singerItem} underlayColor="transparent">
-                                <View>
-                                    <View style={styles.singerItem_ImgCon}>
-                                        <MyImg style={styles.singerItem_Img} source={{ uri: item.singer_pic }} uri={item.singer_pic} />
+                    <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
+                        {
+                            tags.index.map(item => (
+                                <TouchableHighlight underlayColor='#f73c40' key={item.id} onPress={() => this.setParam('index', item.id)} style={[styles.tabItem, item.id === param.index ? styles.tabItemActive : '']}>
+                                    <View>
+                                        <Text style={[styles.tabName, item.id === param.index ? styles.tabNameActive : '']}>
+                                            {item.name}
+                                        </Text>
                                     </View>
-                                    <Text style={styles.singerItem_name}>{item.singer_name}</Text>
-                                </View>
-                            </TouchableHighlight>
-                        ))
-                    }
-                </View>
+                                </TouchableHighlight>
 
-            </ScrollView>
+                            ))
+                        }
+                    </ScrollView>
+                    <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
+                        {
+                            tags.area.map(item => (
+                                <TouchableHighlight key={item.id} onPress={() => this.setParam('area', item.id)} style={[styles.tabItem, item.id === param.area ? styles.tabItemActive : '']}>
+                                    <View>
+                                        <Text style={[styles.tabName, item.id === param.area ? styles.tabNameActive : '']}>
+                                            {item.name}
+                                        </Text>
+                                    </View>
+                                </TouchableHighlight>
+
+                            ))
+                        }
+                    </ScrollView>
+                    <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
+                        {
+                            tags.sex.map(item => (
+                                <TouchableHighlight key={item.id} onPress={() => this.setParam('sex', item.id)} style={[styles.tabItem, item.id === param.sex ? styles.tabItemActive : '']}>
+                                    <View>
+                                        <Text style={[styles.tabName, item.id === param.sex ? styles.tabNameActive : '']}>
+                                            {item.name}
+                                        </Text>
+                                    </View>
+                                </TouchableHighlight>
+
+                            ))
+                        }
+                    </ScrollView>
+
+                    <ScrollView horizontal={true} indicatorStyle="white" style={styles.tabScrollView}>
+                        {
+                            tags.genre.map(item => (
+                                <TouchableHighlight key={item.id} onPress={() => this.setParam('genre', item.id)} style={[styles.tabItem, item.id === param.genre ? styles.tabItemActive : '']}>
+                                    <View>
+                                        <Text style={[styles.tabName, item.id === param.genre ? styles.tabNameActive : '']}>
+                                            {item.name}
+                                        </Text>
+                                    </View>
+                                </TouchableHighlight>
+
+                            ))
+                        }
+                    </ScrollView>
+
+                    <View style={styles.singerCon}>
+                        {
+                            singerlist.map((item, index) => (
+                                <TouchableHighlight onPress={() => this.toSingerDetail(item)} key={index} style={styles.singerItem} underlayColor="transparent">
+                                    <View>
+                                        <View style={styles.singerItem_ImgCon}>
+                                            <MyImg style={styles.singerItem_Img} source={{ uri: item.singer_pic }} uri={item.singer_pic} />
+                                        </View>
+                                        <Text style={styles.singerItem_name}>{item.singer_name}</Text>
+                                    </View>
+                                </TouchableHighlight>
+                            ))
+                        }
+                    </View>
+
+                </ScrollView>
+
+            </View>
+
         )
     }
 }

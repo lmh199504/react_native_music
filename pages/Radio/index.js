@@ -5,7 +5,7 @@ import { View } from 'react-native'
 import { Tabs,ActivityIndicator } from '@ant-design/react-native'
 import { reqGetRadioLists } from '../../api'
 import RadioItem from './RadioItem'
-
+import BottomPlayer from '../../components/bottomPlayer'
 class Radio extends React.Component {
     state = {
         groupList:[],
@@ -63,6 +63,7 @@ class Radio extends React.Component {
                         ))
                     }
                 </Tabs>
+                
             </View>
         )
     }
