@@ -149,7 +149,7 @@ class Mine extends React.Component {
                         }
 
                         <View >
-                            <TouchableHighlight>
+                            <TouchableHighlight onPress={ () => this.props.navigation.navigate("VideoPlay") }> 
                                 <View style={{ height: 50, backgroundColor: "#f3f3f3", borderRadius: 5, width: 50, marginRight: 10, overflow: 'hidden' }} >
                                     <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />
                                 </View>

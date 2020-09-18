@@ -20,7 +20,7 @@ import RegisterScreen from '../register'
 import SingerDetails from '../singerDetail'
 import ClassDetail from '../classDetail'
 import ClassiFied from '../classified'
-
+import VideoPlay from '../videoPlay'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
 
@@ -225,6 +225,15 @@ class Main extends React.Component {
                         header: () => { return null },
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
                     }} />
+
+                    <Stack.Screen name="VideoPlay" component={VideoPlay} options={{
+                        title: "视频播放",
+                        headerTitleAlign: "center",
+                        header: () => { return null },
+                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                    }} />
+
+
                 </Stack.Navigator>
             </NavigationContainer>
         )
