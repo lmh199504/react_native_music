@@ -1,11 +1,12 @@
 import React from 'react'
 
-import { View, Text, ScrollView, Image, TouchableHighlight,BackHandler,ToastAndroid } from "react-native"
+import { View, Text, ScrollView, Image, TouchableHighlight, BackHandler, ToastAndroid } from "react-native"
 import { connect } from 'react-redux'
 import styles from './styles'
 import { setLoveLists, setUserSheets, resetPlaylist, setCurrentSongs, setIndex } from '../../redux/actions'
 import { formatMoment } from '../../utils'
 import AsyncStorage from '@react-native-community/async-storage'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 class Mine extends React.Component {
 
@@ -23,7 +24,7 @@ class Mine extends React.Component {
 
     componentDidMount = () => {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress',
-        this.onBackButtonPressAndroid);
+            this.onBackButtonPressAndroid);
     }
     componentDidUpdate = () => {
 
@@ -149,22 +150,29 @@ class Mine extends React.Component {
 
                         {
                             userSheet.map((item, index) => (
+
                                 <View style={styles.geDan_Item} key={index}>
-                                    <View>
-                                        <View style={styles.geDan_Item_bg_box}>
-                                            <Image style={styles.geDan_Item_bg} source={{ uri: item.sheetCover }} />
+                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('UserSheetDetail', {
+                                        sheetId: item.sheetId
+                                    })}>
+                                        <View style={ {flexDirection:'row'}}>
+                                            <View>
+                                                <View style={styles.geDan_Item_bg_box}>
+                                                    <Image style={styles.geDan_Item_bg} source={{ uri: item.sheetCover }} />
+                                                </View>
+                                            </View>
+                                            <View>
+                                                <Text style={styles.geDan_Item_title}>{item.name}</Text>
+                                                <Text style={styles.geDan_Item_subTitle}>{formatMoment(item.createTime)}</Text>
+                                            </View>
                                         </View>
-                                    </View>
-                                    <View>
-                                        <Text style={styles.geDan_Item_title}>{item.name}</Text>
-                                        <Text style={styles.geDan_Item_subTitle}>{formatMoment(item.createTime)}</Text>
-                                    </View>
+                                    </TouchableOpacity>
                                 </View>
                             ))
                         }
 
                         <View >
-                            <TouchableHighlight onPress={ () => this.props.navigation.navigate("VideoPlay") }> 
+                            <TouchableHighlight onPress={() => this.props.navigation.navigate("VideoPlay")}>
                                 <View style={{ height: 50, backgroundColor: "#f3f3f3", borderRadius: 5, width: 50, marginRight: 10, overflow: 'hidden' }} >
                                     <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />
                                 </View>

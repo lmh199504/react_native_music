@@ -21,9 +21,9 @@ class VideoPlay extends React.Component {
     _onIndexChanged = (index) => {
 
         const { mvList } = this.props
-        this.setState({
-            currentMvUrl: mvList[index].mvUrl
-        })
+        // this.setState({
+        //     currentMvUrl: mvList[index].mvUrl
+        // })
         this.props.setMvIndex(index)
         if (index === mvList.length - 2) {
             this.props.conncatMvLists()
