@@ -7,6 +7,7 @@ import { setLoveLists, setUserSheets, resetPlaylist, setCurrentSongs, setIndex }
 import { formatMoment } from '../../utils'
 import AsyncStorage from '@react-native-community/async-storage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
+import RNExitApp from 'react-native-exit-app';
 
 class Mine extends React.Component {
 
@@ -121,7 +122,7 @@ class Mine extends React.Component {
                                     <Text style={styles.music_Item_Text}>我喜欢的音乐</Text>
                                 </View>
                             </TouchableHighlight>
-                            <View style={styles.mymusic_item}>
+                            {/* <View style={styles.mymusic_item}>
                                 <Image source={require('./images/bg.jpg')} style={styles.music_Item_bg} />
                                 <Image source={require('./images/xin.png')} style={styles.center_img} />
                                 <Text style={styles.music_Item_Text}>我喜欢的音乐</Text>
@@ -135,7 +136,7 @@ class Mine extends React.Component {
                                 <Image source={require('./images/bg.jpg')} style={styles.music_Item_bg} />
                                 <Image source={require('./images/xin.png')} style={styles.center_img} />
                                 <Text style={styles.music_Item_Text}>我喜欢的音乐</Text>
-                            </View>
+                            </View> */}
                         </ScrollView>
                     </View>
 

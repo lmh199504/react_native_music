@@ -1,6 +1,6 @@
 import React from 'react';
 import { View ,Image,StatusBar,ToastAndroid,BackHandler } from 'react-native';
-
+import RNExitApp from 'react-native-exit-app';
 export default class BasicTabsExample extends React.Component {
 
     componentDidMount = () => {

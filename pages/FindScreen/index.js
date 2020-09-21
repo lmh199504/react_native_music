@@ -5,6 +5,7 @@ import Swiper from 'react-native-swiper'
 import { reqGetHome } from '../../api'
 import { formatNum, } from '../../utils'
 import Song from '../../utils/Song'
+import RNExitApp from 'react-native-exit-app';
 import { connect } from 'react-redux'
 import { resetPlaylist, setCurrentSongs, setIndex, addSongToPlay } from '../../redux/actions'
 class FindScreen extends React.Component {

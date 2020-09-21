@@ -81,7 +81,7 @@ class VideoPlay extends React.Component {
                                 />
                                 <View style={styles.bottomInfo}>
                                     <Text style={styles.bottomInfo_Title}>
-                                        {item.title}
+                                        {item.title ? item.title:item.mvtitle}
                                     </Text>
                                     <TouchableOpacity onPress={() => this.toSingerDetails(item.singers?item.singers:item)}>
                                         <Text style={styles.bottomInfo_singer}>

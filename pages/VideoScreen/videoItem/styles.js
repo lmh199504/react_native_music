@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
         flexWrap:'wrap'
     },
     item:{
-        width:"25%",
+        width:"33.3%",
         padding:5
     },
     mvtitle:{
