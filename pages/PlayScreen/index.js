@@ -9,13 +9,14 @@ import {
 import { connect } from 'react-redux'
 import * as Progress from 'react-native-progress'
 import styles from './style'
-import { reqGetLyric } from '../../api'
+import { reqGetLyric, reqDelLoveSong, reqAddLoveSong } from '../../api'
 import Lyric from 'lyric-parser'
 import { BlurView } from "@react-native-community/blur";
 import Swiper from 'react-native-swiper'
-import { formatSongTime } from '../../utils'
-import { playing, stopPlay, setCurrentSongs, setIndex } from '../../redux/actions'
+import { formatSongTime, isLoveSong, downFile } from '../../utils'
+import { playing, stopPlay, setCurrentSongs, setIndex, setLoveLists } from '../../redux/actions'
 import PlayList from '../../components/playList'
+import { Toast } from '@ant-design/react-native'
 
 
 const { width } = Dimensions.get('window')
@@ -243,8 +244,44 @@ class PlayScreen extends React.Component {
         })
     }
 
+    //喜欢
+    addLoveSong = () => {
+        const { currentSong, user } = this.props
+        let songList = []
+        songList.push(currentSong)
+        reqAddLoveSong({ userId: user._id, songList }).then(() => {
+            Toast.info("收藏成功")
+            this.props.setLoveLists()
+        })
+    }
+    //删除喜欢
+    delLoveSong = () => {
+
+        const { currentSong, user } = this.props
+        let songList = []
+        songList.push(currentSong)
+        reqDelLoveSong({ userId: user._id, delList: songList }).then(() => {
+            this.props.setLoveLists()
+        })
+    }
+    //歌曲收藏
+    toggleLove = () => {
+        const { currentSong, loveList } = this.props
+        if (isLoveSong(currentSong, loveList)) {
+            this.delLoveSong()
+        } else {
+            this.addLoveSong()
+        }
+
+    }
+
+
+    downMusic = () => {
+        const { currentSong } = this.props
+		downFile(currentSong.src,currentSong.title)
+    }
     render() {
-        const { currentSong, musictime, isPlay } = this.props
+        const { currentSong, musictime, isPlay, loveList } = this.props
         const { currentLineNum, currentLyric, rotateValue } = this.state
         const swiperOption = {
             loop: true,
@@ -277,18 +314,21 @@ class PlayScreen extends React.Component {
 
                 <View style={styles.mian_content}>
                     <View style={styles.topTitle}>
-                        <View>
-                            <TouchableHighlight onPress={() => { this.props.navigation.goBack() }}>
-                                <Image source={require('./images/goback.png')} style={styles.goBack} />
-                            </TouchableHighlight>
-                        </View>
-                        <View style={styles.muiscInfo}>
-                            <Text style={styles.songname}>{currentSong.title ? currentSong.title : ''}</Text>
-                            <TouchableOpacity onPress={ () => this.toSingerDetail() }>
-                                <Text style={styles.singerName}>{currentSong.singer ? currentSong.singer[0].name : ''}</Text>
-                            </TouchableOpacity>
+                        <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                <View>
+                                    <Image source={require('./images/goback.png')} style={styles.goBack} />
+                                </View>
+                                <View style={styles.muiscInfo}>
+                                    <Text style={styles.songname}>{currentSong.title ? currentSong.title : ''}</Text>
+                                    <TouchableOpacity onPress={() => this.toSingerDetail()}>
+                                        <Text style={styles.singerName}>{currentSong.singer ? currentSong.singer[0].name : ''}</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </TouchableOpacity>
 
-                        </View>
+
                     </View>
 
 
@@ -310,12 +350,17 @@ class PlayScreen extends React.Component {
                                     </Animated.View>
                                 </View>
                                 <View style={styles.menu_btn}>
-                                    <View>
-                                        <Image style={styles.menu_btn_Image} source={require('./images/like.png')} />
-                                    </View>
-                                    <View>
-                                        <Image style={styles.menu_btn_Image} source={require('./images/down.png')} />
-                                    </View>
+                                    <TouchableOpacity onPress={() => this.toggleLove()}>
+                                        <View>
+                                            <Image style={styles.menu_btn_Image} source={isLoveSong(currentSong, loveList) ? require('./images/like_active.png') : require('./images/like.png')} />
+                                        </View>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={ () => this.downMusic() }>
+                                        <View>
+                                            <Image style={styles.menu_btn_Image} source={require('./images/down.png')} />
+                                        </View>
+                                    </TouchableOpacity>
+
                                     <View>
                                         <Image style={styles.menu_btn_Image} source={require('./images/chang.png')} />
                                     </View>
@@ -396,14 +441,16 @@ class PlayScreen extends React.Component {
 
 export default connect(
     state => ({
+        user: state.user,
         currentSong: state.currentSong,
         musictime: state.musictime,
         musictime: state.musictime,
         isPlay: state.isPlay,
         playList: state.playList,
-        currentIndex: state.currentIndex
+        currentIndex: state.currentIndex,
+        loveList: state.loveList
     }),
-    { playing, stopPlay, setCurrentSongs, setIndex }
+    { playing, stopPlay, setCurrentSongs, setIndex, setLoveLists }
 )(PlayScreen)
 
 

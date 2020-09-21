@@ -62,14 +62,14 @@ const styles = StyleSheet.create({
     },
     center_content: {
         marginTop: 40,
-        height: height - 250,
+        height: height - 220,
         // backgroundColor: "red"
     },
     foot_content: {
         height: 60
     },
     topTitle: {
-        marginTop:20,
+        marginTop:40,
         flexDirection: 'row'
     },
     goBack: {

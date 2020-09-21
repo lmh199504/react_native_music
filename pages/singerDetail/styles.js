@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         width:'100%',
         zIndex:99,
         paddingLeft:20,
-        paddingTop:30,
+        paddingTop:40,
         // backgroundColor:'red'
     },
     goBack: {

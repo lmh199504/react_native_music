@@ -5,13 +5,14 @@ import React from 'react'
 import { ScrollView, View, StatusBar, Image, ImageBackground, TouchableHighlight, Text, TouchableOpacity } from 'react-native'
 import { reqGetSingerDesc, reqGetSingerHotsong, reqGetSingerAblumList, reqGetSingerMV, reqGetSingerStarNum, reqAddLoveSinger, reqDelLoveSinger, reqGetSimilarSinger } from '../../api'
 import { formatSongTime, formatNum, isLoveSinger } from '../../utils'
-import { Tabs, ActivityIndicator } from '@ant-design/react-native'
+import { Tabs, ActivityIndicator, Toast } from '@ant-design/react-native'
 import { parseString } from 'xml2js'
 import { connect } from 'react-redux'
-import { setCurrentSongs, setIndex, addSongToPlay, resetPlaylist, setLoveSingers } from '../../redux/actions'
+import { setCurrentSongs, setIndex, addSongToPlay, resetPlaylist, setLoveSingers, setMvIndex, setCurrentMv, resetMvLists } from '../../redux/actions'
 import MyImg from '../../components/Image'
 import styles from './styles'
 import Song from '../../utils/Song'
+
 
 class SingerDetail extends React.Component {
 
@@ -33,11 +34,10 @@ class SingerDetail extends React.Component {
         fanMvList: [],
         fansNum: 0,
         singerlist: [],
-        animating: false
+        animating: false,
     }
     componentDidMount = () => {
         const { singermid } = this.props.route.params
-
         this.setState({
             singermid,
         })
@@ -54,8 +54,39 @@ class SingerDetail extends React.Component {
         this.fetchData(item.mid)
     }
 
-    fetchData = (singermid) => {
 
+    addLoveSinger = () => {
+        const { user } = this.props
+
+        const { singerName, singermid } = this.state
+        reqAddLoveSinger({ userId: user._id, singer: { singerName, singermid } }).then(res => {
+            Toast.success("关注成功.")
+            this.props.setLoveSingers()
+        }).catch(() => {
+            console.log("错误了.")
+        })
+    }
+
+    delLoveSinger = () => {
+        const { singerName, singermid } = this.state
+        reqDelLoveSinger({ singer: { singerName, singermid } }).then(res => {
+            Toast.success('取消关注成功.')
+            this.props.setLoveSingers()
+        })
+    }
+    toggleLove = () => {
+        const { singermid } = this.state
+        const { loveSinger } = this.props
+        // console.log(loveSinger)
+        // console.log(isLoveSinger({singermid},loveSinger))
+        if (isLoveSinger({ singermid }, loveSinger)) { //是喜欢的歌手
+            this.delLoveSinger()
+        } else {
+            this.addLoveSinger()
+        }
+    }
+
+    fetchData = (singermid) => {
         this.setState({
             animating: true,
             singermid
@@ -124,6 +155,23 @@ class SingerDetail extends React.Component {
     }
 
 
+    getSingerHotSong = () => {
+        const { hotSongLimit, singermid } = this.state
+        reqGetSingerHotsong({ singermid, limit: hotSongLimit }).then(res => {
+            this.setState({
+                totalSongs: res.data.singerSongList.data.totalNum,
+                hotSong: res.data.singerSongList.data.songList
+            })
+
+            const { hotSong } = this.state
+            const singerName = hotSong[0].songInfo.singer[0].name
+            this.setState({
+                singerName
+            })
+
+        })
+    }
+
     playThis = (item, index) => {
         const song = new Song(item.songInfo)
         const { playList } = this.props
@@ -144,7 +192,7 @@ class SingerDetail extends React.Component {
                 this.props.setIndex(currentIndex + 1)
             }
         } else {
-            message.info("歌曲已在播放列表中.")
+            Toast.info("歌曲已在播放列表中.")
             this.props.setCurrentSongs(song)
             this.props.setIndex(i)
         }
@@ -172,11 +220,25 @@ class SingerDetail extends React.Component {
     }
 
 
+    playThisMv = (item, index) => {
+        const { mvList, fanMvList } = this.state
+        this.props.setMvIndex(index)
+        this.props.resetMvLists(mvList.concat(fanMvList))
+        this.props.navigation.navigate('VideoPlay')
+    }
+
+    playThisFansMv = (item, index) => {
+        const { mvList, fanMvList } = this.state
+        this.props.setMvIndex(mvList.length + index)
+        this.props.resetMvLists(mvList.concat(fanMvList))
+        this.props.navigation.navigate('VideoPlay')
+    }
+
     render() {
 
         const { fanMvNum, singerMvNum, singermid, singerName, fansNum, hotSong, albumlist, mvList, fanMvList, desc,
             totalSongs, animating, singerlist } = this.state
-
+        const { loveSinger } = this.props
         const tabs = [
             { "title": "歌曲" + totalSongs },
             { "title": "专辑" },
@@ -192,16 +254,20 @@ class SingerDetail extends React.Component {
                     text="正在加载"
                     animating={animating}
                 />
+
                 <View style={styles.topTitle}>
-                    <View>
-                        <TouchableHighlight onPress={() => { this.props.navigation.goBack() }}>
-                            <Image source={require('../../assets/images/goback_white.png')} style={styles.goBack} />
-                        </TouchableHighlight>
-                    </View>
-                    <View style={styles.muiscInfo}>
-                        <Text style={styles.songname}>{singerName}</Text>
-                    </View>
+                    <TouchableOpacity onPress={() => { this.props.navigation.goBack() }}>
+                        <View style={{flexDirection:'row'}}>
+                            <View>
+                                <Image source={require('../../assets/images/goback_white.png')} style={styles.goBack} />
+                            </View>
+                            <View style={styles.muiscInfo}>
+                                <Text style={styles.songname}>{singerName}</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
                 </View>
+
                 <View>
                     <View>
                         <StatusBar barStyle='light-content' backgroundColor='rgba(0,0,0,0)' translucent={true}></StatusBar>
@@ -237,15 +303,28 @@ class SingerDetail extends React.Component {
                                 </View>
 
                                 <View style={styles.rightBtn}>
-                                    <View style={[styles.mybtn, styles.attention]}>
-                                        <Image source={require('./images/jia.png')} style={styles.attentionImg} />
-                                        <Text style={styles.attentionText}>关注</Text>
-                                    </View>
 
-                                    {/* <View style={ [styles.mybtn,styles.attention] }>
-                                        <Image source={ require('./images/gou.png') } style={styles.attentionImg}/>
-                                        <Text style={ styles.attentionText }>已关注</Text>
-                                    </View> */}
+                                    {
+                                        isLoveSinger({ singermid }, loveSinger) ?
+                                            <TouchableOpacity onPress={() => this.toggleLove()}>
+                                                <View style={[styles.mybtn, styles.attention]}>
+                                                    <Image source={require('./images/gou.png')} style={styles.attentionImg} />
+                                                    <Text style={styles.attentionText}>已关注</Text>
+                                                </View>
+                                            </TouchableOpacity>
+
+                                            :
+                                            <TouchableOpacity onPress={() => this.toggleLove()}>
+                                                <View style={[styles.mybtn, styles.attention]}>
+                                                    <Image source={require('./images/jia.png')} style={styles.attentionImg} />
+                                                    <Text style={styles.attentionText}>关注</Text>
+                                                </View>
+                                            </TouchableOpacity>
+
+                                    }
+
+
+
 
 
                                     <View style={styles.mybtn}>
@@ -318,11 +397,14 @@ class SingerDetail extends React.Component {
                             {
                                 mvList.map((item, index) => (
                                     <View style={styles.albumlist_item} key={index}>
-                                        <View style={styles.albumlist_itemBox}>
-                                            <MyImg style={styles.albumList_img} uri={item.pic} />
-                                            <Text style={styles.albumName} numberOfLines={1}>{item.title}</Text>
-                                            <Text style={styles.publishDate} numberOfLines={1}>{item.singer_name}</Text>
-                                        </View>
+                                        <TouchableOpacity onPress={() => this.playThisMv(item, index)}>
+                                            <View style={styles.albumlist_itemBox}>
+                                                <MyImg style={styles.albumList_img} uri={item.pic} />
+                                                <Text style={styles.albumName} numberOfLines={1}>{item.title}</Text>
+                                                <Text style={styles.publishDate} numberOfLines={1}>{item.singer_name}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+
                                     </View>
                                 ))
                             }
@@ -330,11 +412,14 @@ class SingerDetail extends React.Component {
                             {
                                 fanMvList.map((item, index) => (
                                     <View style={styles.albumlist_item} key={index}>
-                                        <View style={styles.albumlist_itemBox}>
-                                            <MyImg style={styles.albumList_img} uri={item.pic} />
-                                            <Text style={styles.albumName} numberOfLines={1}>{item.title}</Text>
-                                            <Text style={styles.publishDate} numberOfLines={1}>{item.singer_name}</Text>
-                                        </View>
+                                        <TouchableOpacity onPress={() => this.playThisFansMv(item, index)}>
+                                            <View style={styles.albumlist_itemBox}>
+                                                <MyImg style={styles.albumList_img} uri={item.pic} />
+                                                <Text style={styles.albumName} numberOfLines={1}>{item.title}</Text>
+                                                <Text style={styles.publishDate} numberOfLines={1}>{item.singer_name}</Text>
+                                            </View>
+                                        </TouchableOpacity>
+
                                     </View>
                                 ))
                             }
@@ -381,7 +466,8 @@ export default connect(
         user: state.user,
         playList: state.playList,
         currentIndex: state.currentIndex,
+        loveSinger: state.loveSinger,
         loveSinger: state.loveSinger
     }),
-    { setCurrentSongs, setIndex, addSongToPlay, resetPlaylist, setLoveSingers }
+    { setCurrentSongs, setIndex, addSongToPlay, resetPlaylist, setLoveSingers, setMvIndex, setCurrentMv, resetMvLists }
 )(SingerDetail) 

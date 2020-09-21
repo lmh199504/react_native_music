@@ -9,7 +9,7 @@ import { reqGetRadioSong } from '../../../api'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { setCurrentSongs, setIndex, resetPlaylist } from '../../../redux/actions'
-
+import { Toast } from '@ant-design/react-native'
 import Song from '../../../utils/Song'
 class RadioItem extends React.Component {
     static propTypes = {
@@ -32,7 +32,10 @@ class RadioItem extends React.Component {
             })
 
             this.props.resetPlaylist(playList)
+
+            Toast.info('电台播放成功')
         })
+
 
     }
 

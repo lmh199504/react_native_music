@@ -2,11 +2,13 @@
 
 import React from 'react'
 import { reqGetMV } from '../../api'
-import { ScrollView, Text, View, TouchableHighlight } from 'react-native'
+import { ScrollView, Text, View, TouchableHighlight, TouchableOpacity } from 'react-native'
 import { ActivityIndicator } from '@ant-design/react-native'
 import styles from './styles'
 import { formatNum } from '../../utils'
 import MyImg from '../../components/Image'
+import { connect } from 'react-redux'
+import { resetMvLists,setMvIndex } from '../../redux/actions'
 class MV extends React.Component {
 
 
@@ -56,8 +58,15 @@ class MV extends React.Component {
             })
         })
     }
-    render() {
 
+    playVideo = (index) => {
+        const { mvList } = this.state
+        this.props.resetMvLists(mvList)
+        this.props.setMvIndex(index)
+        this.props.navigation.navigate("VideoPlay")
+    }
+
+    render() {
         const { mvTag, loading, mvList, param } = this.state
         if (!mvTag.area) {
             return (<ActivityIndicator
@@ -115,14 +124,16 @@ class MV extends React.Component {
                     {
                         mvList.map((item, index) => (
                             <View style={styles.item} key={index}>
-                                <View style={styles.item_box}>
-                                    <View>
-                                        <MyImg uri={item.picurl} style={styles.coverImg} />
+                                <TouchableOpacity onPress={ () => this.playVideo(index) }>
+                                    <View style={styles.item_box}>
+                                        <View>
+                                            <MyImg uri={item.picurl} style={styles.coverImg} />
+                                        </View>
+                                        <Text numberOfLines={1} style={styles.mvtitle}>{item.title}</Text>
+                                        <Text numberOfLines={1} style={styles.singer_name}>{item.singers[0].name}</Text>
+                                        <Text numberOfLines={1} style={styles.listennum}>播放量：{formatNum(item.playcnt)}</Text>
                                     </View>
-                                    <Text numberOfLines={1} style={styles.mvtitle}>{item.title}</Text>
-                                    <Text numberOfLines={1} style={styles.singer_name}>{item.singers[0].name}</Text>
-                                    <Text numberOfLines={1} style={styles.listennum}>播放量：{formatNum(item.playcnt)}</Text>
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         ))
                     }
@@ -132,4 +143,7 @@ class MV extends React.Component {
     }
 }
 
-export default MV
+export default connect(
+    state=>({}),
+    { resetMvLists,setMvIndex }
+)(MV)

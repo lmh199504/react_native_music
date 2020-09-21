@@ -2,16 +2,18 @@
 
 import { AUTH_SUCCESS,AUTH_FAIL,RESET_AUTH,GET_HOME,RESET_PLAYLIST,SET_CURRENT_SONG,SHOW_BIGPLAYER,HIDE_BIGPLAYER,PLAYING,SET_INDEX,STOP_PLAY
 	 ,ADD_SONG_TO_PLAY,SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET,
-	 RESET_TIME,SET_CURRENT_TIME,SET_DURATION
+	 RESET_TIME,SET_CURRENT_TIME,SET_DURATION,RESET_MV_LIST,CONNCAT_MV_LIST,SET_MV_INDEX
 	
 	} from './action-types.js'
 // import Cookies from 'js-cookie'
 import AsyncStorage from '@react-native-community/async-storage'
 import { reqLogin,reqGetUserInfo,reqLogout,reqRegister,reqGetHome,reqGetSongListDetail,reqGetMusicVKey,
-	reqGetLoveSong,reqGetLoveSinger,reqGetLoveSheet,reqGetUserSheet,reqGetUserInfoById
+	reqGetLoveSong,reqGetLoveSinger,reqGetLoveSheet,reqGetUserSheet,reqGetUserInfoById,
+	reqGetMV,reqGetMvPlay
  
  } from '../api/index'
 import Song from '../utils/Song.js'
+import { connect } from 'react-redux'
 // import { message } from 'antd'
 
 //登陆成功的同步action
@@ -212,3 +214,52 @@ export const setUserSheets = () => {
 export const restTime = () => ({type:RESET_TIME})
 export const setCurrentTime = (data) => ({type:SET_CURRENT_TIME,data})
 export const setDuration = (data) => ({type:SET_DURATION,data})
+
+// RESET_MV_LIST,CONNCAT_MV_LIST
+
+
+export const resetMvList = (data) => ({type:RESET_MV_LIST,data})
+
+export const conncatMvList = (data) => ({type:CONNCAT_MV_LIST,data})
+
+
+export const resetMvLists = (mvlist) =>{
+
+	return async dispatch => {
+		for(let i = 0;i<mvlist.length;i++){
+			const item = mvlist[i]
+			const res = await reqGetMvPlay({vid:item.vid})
+			const mp4Arr = res.response.getMVUrl.data[item.vid].mp4
+			const mvUrl = mp4Arr[mp4Arr.length - 1].freeflow_url[mp4Arr[mp4Arr.length - 1].freeflow_url.length - 1]
+			mvlist[i].mvUrl = mvUrl
+		}
+		dispatch(resetMvList(mvlist))
+	}
+	
+}
+
+const param = {
+	area_id: 15,
+	version_id: 7,
+	page: 1,
+	order: 1
+}
+export const conncatMvLists = () => {
+	return async dispatch => {
+		param.page = param.page + 1
+		const res = await reqGetMV(param)
+		const mvList = res.response.mv_list.data.list
+		
+		for(let i = 0;i<mvList.length;i++){
+			const item = mvList[i]
+			const res = await reqGetMvPlay({vid:item.vid})
+			const mp4Arr = res.response.getMVUrl.data[item.vid].mp4
+			const mvUrl = mp4Arr[mp4Arr.length - 1].freeflow_url[mp4Arr[mp4Arr.length - 1].freeflow_url.length - 1]
+			mvList[i].mvUrl = mvUrl
+		}
+		
+		dispatch(conncatMvList(mvList))
+	}
+}
+
+export const setMvIndex = (data) => ({type:SET_MV_INDEX,data})

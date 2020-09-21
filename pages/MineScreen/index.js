@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { View, Text, ScrollView, Image, TouchableHighlight } from "react-native"
+import { View, Text, ScrollView, Image, TouchableHighlight,BackHandler,ToastAndroid } from "react-native"
 import { connect } from 'react-redux'
 import styles from './styles'
 import { setLoveLists, setUserSheets, resetPlaylist, setCurrentSongs, setIndex } from '../../redux/actions'
@@ -22,10 +22,25 @@ class Mine extends React.Component {
     }
 
     componentDidMount = () => {
-
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress',
+        this.onBackButtonPressAndroid);
     }
     componentDidUpdate = () => {
 
+    }
+
+
+    onBackButtonPressAndroid = () => {
+        if (this.props.navigation.isFocused()) {
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                //最近2秒内按过back键，可以退出应用。
+                RNExitApp.exitApp();
+                return false;
+            }
+            this.lastBackPressed = Date.now();
+            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+            return true;
+        }
     }
     render() {
         const { user, userSheet } = this.props
@@ -149,7 +164,7 @@ class Mine extends React.Component {
                         }
 
                         <View >
-                            <TouchableHighlight>
+                            <TouchableHighlight onPress={ () => this.props.navigation.navigate("VideoPlay") }> 
                                 <View style={{ height: 50, backgroundColor: "#f3f3f3", borderRadius: 5, width: 50, marginRight: 10, overflow: 'hidden' }} >
                                     <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />
                                 </View>
