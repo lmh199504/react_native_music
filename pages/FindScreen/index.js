@@ -1,9 +1,12 @@
 import React from 'react'
-import { View, Text, Image, ScrollView, TouchableHighlight } from 'react-native'
+import { View, Text, Image, ScrollView, TouchableHighlight, TouchableOpacity,BackHandler,ToastAndroid } from 'react-native'
 import styles from './styles'
 import Swiper from 'react-native-swiper'
 import { reqGetHome } from '../../api'
-import { formatNum } from '../../utils'
+import { formatNum, } from '../../utils'
+import Song from '../../utils/Song'
+import { connect } from 'react-redux'
+import { resetPlaylist, setCurrentSongs, setIndex, addSongToPlay } from '../../redux/actions'
 class FindScreen extends React.Component {
 
 
@@ -21,6 +24,65 @@ class FindScreen extends React.Component {
                 songlist: res.response.new_song.data.songlist
             })
         })
+
+
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress',
+        this.onBackButtonPressAndroid);
+    }
+
+
+    onBackButtonPressAndroid = () => {
+        if (this.props.navigation.isFocused()) {
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                //最近2秒内按过back键，可以退出应用。
+                RNExitApp.exitApp();
+                return false;
+            }
+            this.lastBackPressed = Date.now();
+            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+            return true;
+        }
+    }
+    playThisOne = (record) => {
+        const { currentIndex, playList } = this.props
+        // console.log(record)
+        let song = new Song(record)
+        const i = playList.findIndex(listItem => {
+            return listItem.songmid === song.songmid
+        })
+        if (i === -1) {
+            if (currentIndex === -1) {
+                this.props.setIndex(0)
+                this.props.addSongToPlay({ index: 0, song })
+                this.props.setCurrentSongs(song)
+            } else {
+                this.props.setIndex(currentIndex + 1)
+                this.props.addSongToPlay({ index: currentIndex + 1, song })
+                this.props.setCurrentSongs(song)
+            }
+        } else {
+            // message.info('歌曲已在播放列表中.')
+            this.props.setCurrentSongs(song)
+            this.props.setIndex(i)
+        }
+    }
+
+    playAllNewSong = () => {
+        const { songlist } = this.state
+        const playList = []
+        for (let i = 0; i < songlist.length; i++) {
+            let song = new Song(songlist[i])
+            playList.push(song)
+            if (i === 0) {
+                this.props.setIndex(0)
+                this.props.setCurrentSongs(song)
+            }
+        }
+        this.props.resetPlaylist(playList)
+    }
+
+    toMoreGeDan = () => {
+        this.props.navigation.navigate('GeDan')
     }
 
     render() {
@@ -125,24 +187,32 @@ class FindScreen extends React.Component {
                         <View>
                             <Text style={styles.titelCon_Text}>人气推荐歌单</Text>
                         </View>
-                        <View style={styles.checkMoreView}>
-                            <Text style={styles.checkMoreText}>查看更多</Text>
-                        </View>
+                        <TouchableOpacity onPress={() => this.toMoreGeDan()}>
+                            <View style={styles.checkMoreView}>
+                                <Text style={styles.checkMoreText}>查看更多</Text>
+                            </View>
+                        </TouchableOpacity>
+
                     </View>
 
                     <ScrollView horizontal={true} pagingEnabled={true}>
                         {
                             recomPlaylist.map((item, index) => (
-                                <View style={styles.hotsItem} key={index}>
-                                    <View style={styles.hotsMusic}>
-                                        <Image style={styles.playBg} source={{ uri: item.cover_url_big || item.cover }} />
-                                        <View style={styles.playCon}>
-                                            <Image style={styles.playImg} source={require('./images/play.png')} />
-                                            <Text style={styles.playNum}>{formatNum(item.listen_num)}</Text>
+                                <TouchableOpacity key={index} onPress={ () => this.props.navigation.navigate('ClassDetail',{
+                                    disstid:item.content_id
+                                }) }>
+                                    <View style={styles.hotsItem} >
+                                        <View style={styles.hotsMusic}>
+                                            <Image style={styles.playBg} source={{ uri: item.cover_url_big || item.cover }} />
+                                            <View style={styles.playCon}>
+                                                <Image style={styles.playImg} source={require('./images/play.png')} />
+                                                <Text style={styles.playNum}>{formatNum(item.listen_num)}</Text>
+                                            </View>
                                         </View>
+                                        <Text style={styles.hotsMusicTitle} numberOfLines={1}>{item.title}</Text>
                                     </View>
-                                    <Text style={styles.hotsMusicTitle} numberOfLines={1}>{item.title}</Text>
-                                </View>
+                                </TouchableOpacity>
+
                             ))
                         }
 
@@ -152,16 +222,18 @@ class FindScreen extends React.Component {
                         <View>
                             <Text style={styles.titelCon_Text}>歌曲推荐</Text>
                         </View>
-                        <View style={styles.checkMoreView}>
-                            <Text style={styles.checkMoreText}>播放全部</Text>
-                        </View>
+                        <TouchableOpacity onPress={() => this.playAllNewSong()}>
+                            <View style={styles.checkMoreView}>
+                                <Text style={styles.checkMoreText}>播放全部</Text>
+                            </View>
+                        </TouchableOpacity>
+
                     </View>
 
                     <Swiper horizontal={true} style={{ height: 180 }} activeDot={<Dot />}>
                         {
                             arr.map((item, index) => (
                                 <View style={styles.suggest} key={index}>
-
                                     {
                                         songlist.map((song, i) => (
                                             i >= index * 3 && i < ((index + 1) * 3) ?
@@ -175,10 +247,12 @@ class FindScreen extends React.Component {
                                                             <Text style={styles.singerName}>{song.singer[0].name}</Text>
                                                         </View>
                                                     </View>
+                                                    <TouchableOpacity onPress={() => this.playThisOne(song)}>
+                                                        <View style={styles.right_MusicItem}>
+                                                            <Image style={styles.right_play} source={require('./images/red_play.png')} />
+                                                        </View>
+                                                    </TouchableOpacity>
 
-                                                    <View style={styles.right_MusicItem}>
-                                                        <Image style={styles.right_play} source={require('./images/red_play.png')} />
-                                                    </View>
                                                 </View> : null
                                         ))
                                     }
@@ -193,7 +267,13 @@ class FindScreen extends React.Component {
         )
     }
 }
-export default FindScreen
+export default connect(
+    state => ({
+        currentIndex: state.currentIndex,
+        playList: state.playList
+    }),
+    { resetPlaylist, setCurrentSongs, setIndex, addSongToPlay }
+)(FindScreen)
 
 
 

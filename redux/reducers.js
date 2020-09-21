@@ -1,12 +1,13 @@
 
 
+import { act } from 'react-test-renderer'
 /* 
 	包含多个reducer函数：根据老的state和指定的action返回一个新的state
  */
 import { combineReducers } from 'redux'
 import { AUTH_SUCCESS,AUTH_FAIL,RESET_AUTH,GET_HOME,RESET_PLAYLIST,SET_CURRENT_SONG,SHOW_BIGPLAYER,HIDE_BIGPLAYER,PLAYING,SET_INDEX,STOP_PLAY,ADD_SONG_TO_PLAY ,
 	SHOW_MV_PLAYER,HIDE_MV_PLAYER,SET_CURRENT_MV,SET_LOVE_LIST,SET_LOVE_SINGER,SET_LOVE_SHEET,SET_USER_SHEET,
-	RESET_TIME,SET_CURRENT_TIME,SET_DURATION,RESET_MV_LIST,CONNCAT_MV_LIST
+	RESET_TIME,SET_CURRENT_TIME,SET_DURATION,RESET_MV_LIST,CONNCAT_MV_LIST,SET_MV_INDEX
 } from './action-types.js'
 
 
@@ -185,6 +186,15 @@ function mvList(state=[],action){
 	}
 }
 
+function mvIndex(state=0,action){
+	switch (action.type){
+		case SET_MV_INDEX:
+			return action.data
+		default: 
+			return state
+	}
+}
+
 
 export default combineReducers({
 	user,
@@ -201,5 +211,6 @@ export default combineReducers({
 	loveSheet,
 	userSheet,
 	musictime,
-	mvList
+	mvList,
+	mvIndex
 })

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { View, Text, ScrollView, Image, TouchableHighlight } from "react-native"
+import { View, Text, ScrollView, Image, TouchableHighlight,BackHandler,ToastAndroid } from "react-native"
 import { connect } from 'react-redux'
 import styles from './styles'
 import { setLoveLists, setUserSheets, resetPlaylist, setCurrentSongs, setIndex } from '../../redux/actions'
@@ -22,10 +22,25 @@ class Mine extends React.Component {
     }
 
     componentDidMount = () => {
-
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress',
+        this.onBackButtonPressAndroid);
     }
     componentDidUpdate = () => {
 
+    }
+
+
+    onBackButtonPressAndroid = () => {
+        if (this.props.navigation.isFocused()) {
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                //最近2秒内按过back键，可以退出应用。
+                RNExitApp.exitApp();
+                return false;
+            }
+            this.lastBackPressed = Date.now();
+            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+            return true;
+        }
     }
     render() {
         const { user, userSheet } = this.props

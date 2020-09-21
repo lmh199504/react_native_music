@@ -1,9 +1,10 @@
 
 import React from 'react'
-import { ScrollView, View, Image, Text } from 'react-native'
+import { ScrollView, View, Image, Text, TouchableOpacity } from 'react-native'
 import styles from './styles'
 import Swiper from 'react-native-swiper'
 import { reqGetDigitalAlbumLists } from '../../api'
+import { Toast } from '@ant-design/react-native'
 class Digital extends React.Component {
 
     state = {
@@ -69,17 +70,20 @@ class Digital extends React.Component {
                                     {
                                         item.albumlist.map((ablum, index) => (
                                             <View key={index} style={styles.albumItem}>
-                                                <View style={ styles.albumItem_box }>
+                                                <View style={styles.albumItem_box}>
                                                     <View>
                                                         <Image style={styles.album_Img} source={{ uri: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${ablum.album_mid}.jpg?max_age=2592000` }} />
                                                     </View>
-                                                    <Text numberOfLines={1} style={ styles.album_name }>{ablum.album_name}</Text>
-                                                    <Text numberOfLines={1} style={ styles.singer_name }>{ablum.singer_name}</Text>
-                                                    <View style={ styles.bottomBtn }>
-                                                        <Text style={  styles.money }>¥ 25</Text>
-                                                        <View style={ styles.btn }>
-                                                            <Text style={ styles.btn_text }>立即购买</Text>
-                                                        </View>
+                                                    <Text numberOfLines={1} style={styles.album_name}>{ablum.album_name}</Text>
+                                                    <Text numberOfLines={1} style={styles.singer_name}>{ablum.singer_name}</Text>
+                                                    <View style={styles.bottomBtn}>
+                                                        <Text style={styles.money}>¥ 25</Text>
+                                                        <TouchableOpacity onPress={ () => Toast.info('不许买哦') }>
+                                                            <View style={styles.btn}>
+                                                                <Text style={styles.btn_text}>立即购买</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+
                                                     </View>
                                                 </View>
                                             </View>

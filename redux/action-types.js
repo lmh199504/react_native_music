@@ -30,3 +30,5 @@ export const SET_DURATION = 'set_duration' //设置时长
 export const RESET_TIME = 'reset_time' //重新设置歌曲时间
 export const CONNCAT_MV_LIST = 'conncat_mv_list'  //获取更多的mv
 export const RESET_MV_LIST = 'reset_mv_list' //重新设置mv列表
+
+export const SET_MV_INDEX = 'set_mv_index' //设置当前播放mv序号

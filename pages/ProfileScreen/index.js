@@ -1,7 +1,25 @@
 import React from 'react';
-import { View ,Image,StatusBar } from 'react-native';
+import { View ,Image,StatusBar,ToastAndroid,BackHandler } from 'react-native';
 
 export default class BasicTabsExample extends React.Component {
+
+    componentDidMount = () => {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress',
+        this.onBackButtonPressAndroid);
+    }
+
+    onBackButtonPressAndroid = () => {
+        if (this.props.navigation.isFocused()) {
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                //最近2秒内按过back键，可以退出应用。
+                RNExitApp.exitApp();
+                return false;
+            }
+            this.lastBackPressed = Date.now();
+            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+            return true;
+        }
+    }
     render() {
         return (
             <View style={{ flex: 1 }}>

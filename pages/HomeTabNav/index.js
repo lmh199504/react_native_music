@@ -2,7 +2,7 @@
 import React from 'react'
 import Animated from 'react-native-reanimated';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View, TouchableOpacity,Image,StatusBar  } from 'react-native';
+import { View, TouchableOpacity,Image,StatusBar,ToastAndroid,BackHandler  } from 'react-native';
 import FindScreen from '../FindScreen'
 import ProfileScreen from '../ProfileScreen'
 import MineScreen from '../MineScreen'
@@ -13,6 +13,25 @@ const Tab = createMaterialTopTabNavigator();
 
 class MyTabBar extends React.Component {
 
+
+
+    componentDidMount = () => {
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress',
+            this.onBackButtonPressAndroid);
+    }
+
+    onBackButtonPressAndroid = () => {
+        if (this.props.navigation.isFocused()) {
+            if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+                //最近2秒内按过back键，可以退出应用。
+                RNExitApp.exitApp();
+                return false;
+            }
+            this.lastBackPressed = Date.now();
+            ToastAndroid.show('再按一次退出应用', ToastAndroid.SHORT);
+            return true;
+        }
+    }
     render() {
         const { state, descriptors, navigation, position } = this.props
         const StatusBarColor = state.index !== 0 ? '#fff' : '#1b1e23'

@@ -8,7 +8,7 @@ import styles from './styles'
 import { formatNum } from '../../utils'
 import MyImg from '../../components/Image'
 import { connect } from 'react-redux'
-import { resetMvList } from '../../redux/actions'
+import { resetMvLists,setMvIndex } from '../../redux/actions'
 class MV extends React.Component {
 
 
@@ -59,9 +59,10 @@ class MV extends React.Component {
         })
     }
 
-    playVideo = () => {
+    playVideo = (index) => {
         const { mvList } = this.state
-        this.props.resetMvList(mvList)
+        this.props.resetMvLists(mvList)
+        this.props.setMvIndex(index)
         this.props.navigation.navigate("VideoPlay")
     }
 
@@ -123,7 +124,7 @@ class MV extends React.Component {
                     {
                         mvList.map((item, index) => (
                             <View style={styles.item} key={index}>
-                                <TouchableOpacity onPress={ () => this.playVideo() }>
+                                <TouchableOpacity onPress={ () => this.playVideo(index) }>
                                     <View style={styles.item_box}>
                                         <View>
                                             <MyImg uri={item.picurl} style={styles.coverImg} />
@@ -144,5 +145,5 @@ class MV extends React.Component {
 
 export default connect(
     state=>({}),
-    { resetMvList }
+    { resetMvLists,setMvIndex }
 )(MV)
