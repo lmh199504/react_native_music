@@ -1,8 +1,9 @@
 
 import React from 'react'
-import { View, StyleSheet, Image, Button, Text, TouchableOpacity, BVLinearGradient } from 'react-native'
+import { View, Image, Text, TouchableOpacity, BVLinearGradient } from 'react-native'
 import { DrawerContentScrollView } from '@react-navigation/drawer'
 import LinearGradient from 'react-native-linear-gradient'
+import RNExitApp from 'react-native-exit-app';
 import styles from './style'
 class DrawerContent extends React.Component {
     pressFun() {
@@ -12,7 +13,7 @@ class DrawerContent extends React.Component {
         const { state, descriptors, navigation, position } = this.props
         return (
             <View style={styles.main}>
-                <DrawerContentScrollView style={{marginBottom:30}}>
+                <DrawerContentScrollView style={{ marginBottom: 30 }}>
                     <LinearGradient colors={['#7b7b7b', '#5d5d5d']} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.topCon}>
                         <View>
                             <View style={styles.flexBet}>
@@ -55,7 +56,7 @@ class DrawerContent extends React.Component {
                         </View>
 
                         <View style={{ ...styles.flexBet, ...styles.marginTop10, marginBottom: 15 }}>
-                            <View style={{width: '25%' }}>
+                            <View style={{ width: '25%' }}>
                                 <View style={styles.foruItem}>
                                     <Image style={styles.iconImg} source={require('../../assets/images/message.png')} />
                                 </View>
@@ -144,24 +145,27 @@ class DrawerContent extends React.Component {
                                 <Image style={styles.itemIcon} source={require('../../assets/images/anquan.png')} />
                                 <Text style={styles.itemText}>青少年模式</Text>
                             </View>
-        
+
                         </View>
 
                     </View>
                 </DrawerContentScrollView>
                 <View style={styles.fixedBottom}>
-                    <View style={ styles.flexBottomItem}>
+                    <View style={styles.flexBottomItem}>
                         <Image style={styles.itemIcon} source={require('../../assets/images/yejian.png')} />
                         <Text style={styles.itemText}>夜间模式</Text>
                     </View>
-                    <View style={ styles.flexBottomItem}>
+                    <View style={styles.flexBottomItem}>
                         <Image style={styles.itemIcon} source={require('../../assets/images/setting.png')} />
                         <Text style={styles.itemText}>设置</Text>
                     </View>
-                    <View style={ styles.flexBottomItem}>
-                        <Image style={styles.itemIcon} source={require('../../assets/images/tuichu.png')} />
-                        <Text style={styles.itemText}>退出</Text>
-                    </View>
+                    <TouchableOpacity onPress={ () =>  RNExitApp.exitApp() }>
+                        <View style={styles.flexBottomItem}>
+                            <Image style={styles.itemIcon} source={require('../../assets/images/tuichu.png')} />
+                            <Text style={styles.itemText}>退出</Text>
+                        </View>
+                    </TouchableOpacity>
+
                 </View>
             </View>
         )

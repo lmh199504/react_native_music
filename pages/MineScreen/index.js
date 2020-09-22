@@ -5,12 +5,14 @@ import { connect } from 'react-redux'
 import styles from './styles'
 import { setLoveLists, setUserSheets, resetPlaylist, setCurrentSongs, setIndex } from '../../redux/actions'
 import { formatMoment } from '../../utils'
-import AsyncStorage from '@react-native-community/async-storage'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import RNExitApp from 'react-native-exit-app';
+import { Toast } from '@ant-design/react-native'
 
 class Mine extends React.Component {
-
+    state = {
+        photos:''
+    }
     onPressAdd = () => {
         const { loveList } = this.props
         loveList.forEach((item, index) => {
@@ -44,6 +46,8 @@ class Mine extends React.Component {
             return true;
         }
     }
+
+
     render() {
         const { user, userSheet } = this.props
         return (
@@ -156,7 +160,7 @@ class Mine extends React.Component {
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('UserSheetDetail', {
                                         sheetId: item.sheetId
                                     })}>
-                                        <View style={ {flexDirection:'row'}}>
+                                        <View style={{ flexDirection: 'row' }}>
                                             <View>
                                                 <View style={styles.geDan_Item_bg_box}>
                                                     <Image style={styles.geDan_Item_bg} source={{ uri: item.sheetCover }} />
@@ -172,8 +176,8 @@ class Mine extends React.Component {
                             ))
                         }
 
-                        <View >
-                            <TouchableHighlight onPress={() => this.props.navigation.navigate("VideoPlay")}>
+                        <View style={{flexDirection:'row'}}>
+                            <TouchableHighlight underlayColor="#fff" onPress={ () => Toast.info("不许新建.") }>
                                 <View style={{ height: 50, backgroundColor: "#f3f3f3", borderRadius: 5, width: 50, marginRight: 10, overflow: 'hidden' }} >
                                     <Image style={{ width: 40, height: 40, marginLeft: 5, marginTop: 5 }} source={require('./images/add.png')} />
                                 </View>
