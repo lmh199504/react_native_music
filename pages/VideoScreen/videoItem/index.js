@@ -1,7 +1,7 @@
 
 
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler'
 import styles from './styles'
 import PropTypes from 'prop-types'
@@ -9,6 +9,8 @@ import { reqGetMvByTag } from '../../../api'
 import { ActivityIndicator } from '@ant-design/react-native'
 import { formatNum } from '../../../utils'
 import MyImg from '../../../components/Image'
+import { connect } from 'react-redux'
+import { resetMvLists, setMvIndex } from '../../../redux/actions'
 class VideoItem extends React.Component {
 
     static propTypes = {
@@ -22,6 +24,13 @@ class VideoItem extends React.Component {
 
     componentDidMount = () => {
         this.getData()
+    }
+
+    playVideo = (index) => {
+        const { mvList } = this.state
+        this.props.resetMvLists(mvList)
+        this.props.setMvIndex(index)
+        this.props.navigation.navigate("VideoPlay")
     }
     getData = () => {
 
@@ -56,14 +65,16 @@ class VideoItem extends React.Component {
                     {
                         mvList.map((item, index) => (
                             <View style={styles.item} key={index}>
-                                <View style={styles.item_box}>
-                                    <View>
-                                        <MyImg uri={item.picurl} style={styles.coverImg }/>
+                                <TouchableOpacity onPress={ () => this.playVideo(index) }>
+                                    <View style={styles.item_box}>
+                                        <View>
+                                            <MyImg uri={item.picurl} style={styles.coverImg} />
+                                        </View>
+                                        <Text numberOfLines={1} style={styles.mvtitle}>{item.mvtitle}</Text>
+                                        <Text numberOfLines={1} style={styles.singer_name}>{item.singer_name}</Text>
+                                        <Text numberOfLines={1} style={styles.listennum}>播放量：{formatNum(item.listennum)}</Text>
                                     </View>
-                                    <Text numberOfLines={1} style={styles.mvtitle}>{item.mvtitle}</Text>
-                                    <Text numberOfLines={1} style={styles.singer_name }>{item.singer_name}</Text>
-                                    <Text numberOfLines={1} style={styles.listennum}>播放量：{formatNum(item.listennum)}</Text>
-                                </View>
+                                </TouchableOpacity>
                             </View>
                         ))
                     }
@@ -73,4 +84,9 @@ class VideoItem extends React.Component {
     }
 }
 
-export default VideoItem
+export default connect(
+    state => ({
+
+    }),
+    { resetMvLists, setMvIndex }
+)(VideoItem) 

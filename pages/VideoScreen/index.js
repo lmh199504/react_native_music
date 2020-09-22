@@ -4,6 +4,7 @@ import React from 'react'
 import { View, Text, TouchableOpacity,ToastAndroid,BackHandler } from 'react-native'
 import { Tabs } from '@ant-design/react-native'
 import VideoItem from './videoItem'
+import RNExitApp from 'react-native-exit-app';
 class Video extends React.Component {
 
 
@@ -84,7 +85,7 @@ class Video extends React.Component {
                     {
                         tabs.map(item => (
                             <View key={item.id}>
-                                <VideoItem lan={item.lan}/>
+                                <VideoItem lan={item.lan} {...this.props}/>
                             </View>
                         ))
                     }

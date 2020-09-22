@@ -21,6 +21,7 @@ import SingerDetails from '../singerDetail'
 import ClassDetail from '../classDetail'
 import ClassiFied from '../classified'
 import VideoPlay from '../videoPlay'
+import UserSheetDetail from '../userSheetDetail'
 import { connect } from "react-redux";
 import Sound from 'react-native-sound';
 
@@ -228,6 +229,13 @@ class Main extends React.Component {
 
                     <Stack.Screen name="VideoPlay" component={VideoPlay} options={{
                         title: "视频播放",
+                        headerTitleAlign: "center",
+                        header: () => { return null },
+                        cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
+                    }} />
+
+                    <Stack.Screen name="UserSheetDetail" component={UserSheetDetail} options={{
+                        title: "用户歌单详情",
                         headerTitleAlign: "center",
                         header: () => { return null },
                         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS
